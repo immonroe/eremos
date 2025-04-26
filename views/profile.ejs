@@ -10,84 +10,60 @@
   <div class="container">
 
     <div class="page-header text-center">
-      <h1>Eremos</span></h1>
+      <h1>Eremos</h1>
       <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-
-      <p><strong>Monthly Budget:</strong> $<%= user.budget || 0 %></p>
-      <p><strong>Total Spent:</strong> $<%= totalSpent %></p>
-      <p><strong>Remaining Balance:</strong> $<%= (user.budget || 0) - totalSpent %></p>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-6">
+        <div class="panel panel-primary">
+          <div class="panel-heading text-center">
+            <h3 class="panel-title">New Journal Entry</h3>
+          </div>
+          <div class="panel-body">
+            <% if (user.local.email) { %>
+            <form action="/messages" method="POST">
+              <input type="hidden" name="name" value="<%= user.local.email %>">
 
-      <!-- LOCAL INFORMATION -->
-      <!-- <div class="col-sm-6">
-        <div class="well">
-          <h3><span class="fa fa-user"></span> Local</h3>
+              <div class="form-group">
+                <input type="text" name="question1" class="form-control" placeholder="Question #1" required>
+              </div>
+              <div class="form-group">
+                <input type="text" name="question2" class="form-control" placeholder="Question #2" required>
+              </div>
+              <div class="form-group">
+                <input type="text" name="question3" class="form-control" placeholder="Question #3" required>
+              </div>
+              <div class="form-group">
+                <input type="text" name="question4" class="form-control" placeholder="Question #4" required>
+              </div>
 
-          <% if (user.local.email) { %>
-            <p>
-              <strong>id</strong>: <%= user._id %><br>
-              <strong>email</strong>: <%= user.local.email %><br>
-              <strong>password</strong>: <%= user.local.password %>
-            </p>
-
-            <a href="/unlink/local" class="btn btn-default">Unlink</a>
-          <% } else { %>
-            <a href="/connect/local" class="btn btn-default">Connect Local</a>
-          <% } %>
-        </div>
-      </div> -->
-
-      <div class="col-sm-6 input-container">
-        <div class="card">
-          <h2>Set Monthly Budget</h2>
-          <form action="/setBudget" method="POST" class="form-inline">
-            <div class="form-group">
-              <input type="number" name="budget" placeholder="Monthly Budget" min="0" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Budget</button>
-          </form>
-        </div>
-
-        <div class="card">
-          <h2>Enter Item</h2>
-          <% if (user.local.email) { %>
-          <form action="/messages" method="POST" class="form">
-            <input type="hidden" value="<%= user.local.email %>" name="name">
-            <div class="form-group">
-              <input type="text" placeholder="item" name="item" class="form-control" required>
-            </div>
-            <div class="form-group">
-              <input type="number" placeholder="price" name="price" class="form-control" min="0" step=".01" required>
-            </div>
-            <div class="form-group">
-              <input type="text" placeholder="type" name="type" class="form-control" required>
-            </div>
-            <div class="form-group">
-              <input type="date" name="date" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
-          </form>
-          <% } %>
+              <button type="submit" class="btn btn-success btn-block">Save Entry</button>
+            </form>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
 
     <hr>
 
-    <h3>Expense History</h3>
-    <ul class="list-group messages">
-      <% for (var i = 0; i < messages.length; i++) { %>
-      <li class="list-group-item message">
-        <strong>Name:</strong> <%= messages[i].name %><br>
-        <strong>Item:</strong> <%= messages[i].item %><br>
-        <strong>Price:</strong> $<%= messages[i].price %><br>
-        <strong>Category:</strong> <%= messages[i].type %><br>
-        <strong>Date:</strong> <%= messages[i].date %><br>
-        <span><i class="fa fa-trash-o" aria-hidden="true"></i></span>
-      </li>
-      <% } %>
+    <h3 class="text-center">Past Entries</h3>
+    <ul class="list-group">
+      <% messages.forEach(function(message) { %>
+        <li class="list-group-item" data-id="<%= message._id %>">
+          <p><strong>Date:</strong> <%= message.date %> <%= message.time %></p>
+          <p><strong>Question 1:</strong> <%= message.question1 %></p>
+          <p><strong>Question 2:</strong> <%= message.question2 %></p>
+          <p><strong>Question 3:</strong> <%= message.question3 %></p>
+          <p><strong>Question 4:</strong> <%= message.question4 %></p>
+          <div class="text-right">
+            <button class="btn btn-danger btn-sm delete-btn">
+              <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+            </button>
+          </div>
+        </li>
+      <% }); %>
     </ul>
 
   </div>

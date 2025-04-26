@@ -12,20 +12,12 @@ module.exports = function(app, passport, db) {
       db.collection('messages').find({ createdBy: req.user._id }).toArray((err, result) => {
         if (err) return console.log(err)
     
-        const totalSpent = result.reduce((sum, msg) => sum + Number(msg.price || 0), 0)
-    
-        // Ran into bug where monthly budget was not live updating
-        db.collection('users').findOne({ _id: req.user._id }, (err, userDoc) => {
-          if (err) return console.log(err)
-    
-          res.render('profile.ejs', {
-            user: userDoc,
-            messages: result,
-            totalSpent: totalSpent
-          })
-        })
-      })
-    })    
+        res.render('profile.ejs', {
+          user: req.user,
+          messages: result
+        });
+      });
+    });
 
     // LOGOUT ==============================
     app.get('/logout', function(req, res) {
@@ -35,80 +27,38 @@ module.exports = function(app, passport, db) {
         res.redirect('/');
     });
 
-// message board routes ===============================================================
+// journal entry routes ===============================================================
 
     app.post('/messages', (req, res) => {
-      db.collection('messages').save(
-        {name: req.body.name, 
-          item: req.body.item, 
-          price: req.body.price, 
-          type: req.body.type, 
-          date: req.body.date, 
-          // msg: req.body.msg,
-          createdBy: req.user._id,
-          // thumbUp: 0, 
-          // thumbDown:0
+
+      const now = new Date();
+
+      db.collection('messages').save({
+        question1: req.body.question1, 
+        question2: req.body.question2, 
+        question3: req.body.question3, 
+        question4: req.body.question4, 
+        createdBy: req.user._id,
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString(),
     }, (err, result) => {
         if (err) return console.log(err)
-        console.log('saved to database')
+        console.log('Journal entry saved to database')
         res.redirect('/profile')
       })
     })
 
-    // creates the budget
-    app.post('/setBudget', isLoggedIn, (req, res) => {
-      const budget = Number(req.body.budget)
-    
-      db.collection('users').updateOne(
-        { _id: req.user._id },
-        { $set: { 'budget': budget } },
-        (err, result) => {
-          if (err) return console.log(err)
-          console.log(`Updated monthly budget to $${budget}`)
-          res.redirect('/profile')
-        }
-      )
-    })
-
-    // app.put('/messages/upvote', (req, res) => {
-    //   db.collection('messages')
-    //   .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-    //     $set: {
-    //       thumbUp:req.body.thumbUp + 1
-    //     }
-    //   }, {
-    //     sort: {_id: -1},
-    //     upsert: true
-    //   }, (err, result) => {
-    //     if (err) return res.send(err)
-    //     res.send(result)
-    //   })
-    // })
-
-    // app.put('/messages/downvote', (req, res) => {
-    //   db.collection('messages')
-    //   .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-    //     $set: {
-    //       thumbUp:req.body.thumbUp - 1
-    //     }
-    //   }, {
-    //     sort: {_id: -1},
-    //     upsert: true
-    //   }, (err, result) => {
-    //     if (err) return res.send(err)
-    //     res.send(result)
-    //   })
-    // })
-
     app.delete('/messages', (req, res) => {
-      console.log('DELETE request body:', req.body)
-      // Do I need to include all keys in delete request? Reference profile.ejs file for items
-      db.collection('messages').findOneAndDelete({name: req.body.name, item: req.body.item}, (err, result) => {
-        if (err) return res.status(500).send(err)
-        if (!result.value) return res.status(404).send('Message not found.')
-        res.send('Message deleted!')
-      })
-    })
+      const messageId = req.body._id;
+      
+      db.collection('messages').deleteOne({ _id: new ObjectId(messageId) }, (err, result) => {
+        if (err) {
+          return res.status(500).send('Error deleting message');
+        }
+        console.log('Message deleted');
+        res.send('Entry deleted!');
+      });
+    });
 
 // =============================================================================
 // AUTHENTICATE (FIRST LOGIN) ==================================================
