@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eremos - Authentication</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="theme-toggle" id="themeToggle">
+      <i class="fas fa-sun"></i>
+      <i class="fas fa-moon"></i>
+    </div>
+
+    <div class="auth-logo">
+      <h1>Eremos</h1>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Welcome</h2>
+        <p>Sign in to your account or create a new one</p>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="tab-header">
+          <button class="tab-btn active" data-tab="login">Login</button>
+          <button class="tab-btn" data-tab="signup">Sign Up</button>
+        </div>
+
+        <div class="tab-content">
+          <!-- Login Form -->
+          <div class="tab-pane active" id="login">
+            <% if (typeof message !== 'undefined' && message.length > 0) { %>
+              <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+
+            <form action="/login" method="post">
+              <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" class="form-control" name="email" placeholder="m@example.com" required>
+              </div>
+              
+              <div class="form-group">
+                <div class="password-header">
+                  <label for="login-password">Password</label>
+                  <a href="/forgot-password" class="forgot-link">Forgot password?</a>
+                </div>
+                <input type="password" id="login-password" class="form-control" name="password" required>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+
+            <div class="auth-footer">
+              <p>Don't have an account? <a href="#" class="tab-link" data-tab="signup">Sign up</a></p>
+            </div>
+          </div>
+
+          <!-- Signup Form -->
+          <div class="tab-pane" id="signup">
+            <% if (typeof message !== 'undefined' && message.length > 0) { %>
+              <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+
+            <form action="/signup" method="post">
+              <div class="form-group">
+                <label for="signup-name">Full Name</label>
+                <input type="text" id="signup-name" class="form-control" name="name" placeholder="John Doe" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" class="form-control" name="email" placeholder="m@example.com" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" class="form-control" name="password" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" class="form-control" name="confirmPassword" required>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+              <p>Already have an account? <a href="#" class="tab-link" data-tab="login">Login</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
