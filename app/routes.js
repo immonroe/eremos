@@ -1,5 +1,6 @@
 module.exports = function(app, passport, db) {
-
+  // this allows delete button to work
+  const { ObjectId } = require('mongodb');
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
@@ -48,16 +49,17 @@ module.exports = function(app, passport, db) {
       })
     })
 
-    app.delete('/messages', (req, res) => {
-      const messageId = req.body._id;
-      
-      db.collection('messages').deleteOne({ _id: new ObjectId(messageId) }, (err, result) => {
-        if (err) {
-          return res.status(500).send('Error deleting message');
+    app.delete('/messages/:id', (req, res) => {
+      db.collection('messages').deleteOne(
+        { _id: new ObjectId(req.params.id) },
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Error deleting message');
+          }
+          res.send('Entry deleted!');
         }
-        console.log('Message deleted');
-        res.send('Entry deleted!');
-      });
+      );
     });
 
 // =============================================================================

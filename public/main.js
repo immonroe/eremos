@@ -7,12 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const messageId = messageItem.getAttribute('data-id'); 
       console.log('Deleting message with ID:', messageId);
 
-      fetch('/messages', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ _id: messageId })
+      // Optional: confirm deletion via page alert - will update to bootstrap component
+      if (!confirm('Are you sure you want to delete this journal entry?')) {
+        return; 
+      }
+
+      fetch(`/messages/${messageId}`, {
+        method: 'DELETE'
       })
       .then(response => response.text())
       .then(data => {
