@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Save draft functionality
-  const saveDraftBtn = document.querySelector('.btn-outline');
+  // const saveDraftBtn = document.querySelector('.btn-outline');
   
   if (saveDraftBtn) {
     saveDraftBtn.addEventListener('click', function() {
