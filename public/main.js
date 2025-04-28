@@ -125,20 +125,20 @@ document.addEventListener('DOMContentLoaded', function() {
       alert('Draft saved!');
     });
     
-    // Load draft if exists
-    const savedDraft = localStorage.getItem('journalDraft');
-    if (savedDraft) {
-      const draft = JSON.parse(savedDraft);
+    // Load draft if exists - will try and figure this out as time goes on
+    // const savedDraft = localStorage.getItem('journalDraft');
+    // if (savedDraft) {
+    //   const draft = JSON.parse(savedDraft);
       
       // Ask user if they want to load the draft
-      const loadDraft = confirm(`You have a saved draft from ${new Date(draft.savedAt).toLocaleString()}. Would you like to load it?`);
+    //   const loadDraft = confirm(`You have a saved draft from ${new Date(draft.savedAt).toLocaleString()}. Would you like to load it?`);
       
-      if (loadDraft) {
-        document.querySelector('input[name="question1"]').value = draft.question1 || '';
-        document.querySelector('input[name="question2"]').value = draft.question2 || '';
-        document.querySelector('input[name="question3"]').value = draft.question3 || '';
-        document.querySelector('input[name="question4"]').value = draft.question4 || '';
-      }
-    }
+    //   if (loadDraft) {
+    //     document.querySelector('input[name="question1"]').value = draft.question1 || '';
+    //     document.querySelector('input[name="question2"]').value = draft.question2 || '';
+    //     document.querySelector('input[name="question3"]').value = draft.question3 || '';
+    //     document.querySelector('input[name="question4"]').value = draft.question4 || '';
+    //   }
+    // }
   }
 });
