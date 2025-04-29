@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eremos - Entry Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Link your main stylesheet -->
+  <link rel="stylesheet" href="/style.css"> <!-- Ensure path is correct -->
+  <!-- Removed inline <style> block -->
+</head>
+<body>
+  <!-- You can include shared partials like headers/footers if you set them up -->
+
+  <main class="main-content single-entry-view"> <!-- Add class for potential styling -->
+    <div class="content">
+      <div class="content-header">
+        <!-- Display Date/Time - Use variables passed from route -->
+        <h2>Journal Entry from <%= locals.displayDate || 'Unknown Date' %> at <%= locals.displayTime || 'Unknown Time' %></h2>
+        <!-- Back Button -->
+        <!-- Add relevant classes from your CSS for styling -->
+        <a href="/profile" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;"><i class="fas fa-arrow-left"></i> Back to Journal List</a>
+      </div>
+
+      <!-- Display User's Entry -->
+      <!-- Add relevant card classes from your CSS -->
+      <div class="card entry-details-card mb-4">
+        <div class="card-header">
+           <h5 class="mb-0">Your Thoughts</h5>
+        </div>
+        <div class="card-body">
+           <!-- Access the main text field - ensure 'entry.text' matches your DB field -->
+           <% if (locals.entry && entry.text) { %>
+              <!-- Add class entry-content for styling text (e.g., pre-wrap) in style.css -->
+              <p class="entry-content"><%= entry.text %></p>
+           <% } else { %>
+              <!-- Add class status-message for styling in style.css -->
+              <p class="status-message">Entry text not found.</p>
+           <% } %>
+        </div>
+      </div>
+
+      <!-- Display AI Reflection -->
+      <!-- Add relevant card classes from your CSS -->
+      <div class="card reflection-card">
+         <div class="card-header">
+           <h5 class="mb-0">Eremos Reflection</h5>
+         </div>
+         <div class="card-body">
+           <% if (locals.entry && entry.aiReflection) { %>
+               <%
+                 // Check for known error/status messages from aiService
+                 const isError = entry.aiReflection.includes('Error:') || entry.aiReflection.includes('failed') || entry.aiReflection.includes('unavailable') || entry.aiReflection.includes('stopped');
+                 const isPending = entry.aiReflection.includes('pending');
+                 let mainReflection = '';
+                 let resourcesSection = '';
+
+                 if (!isError && !isPending) {
+                   // Split reflection and resources based on the markers
+                   const reflectionParts = entry.aiReflection.split('--- Resources ---');
+                   mainReflection = reflectionParts[0].trim();
+                   if (reflectionParts.length > 1) {
+                       const resourcesContent = reflectionParts[1].split('--- End Resources ---')[0].trim();
+                       resourcesSection = resourcesContent;
+                   }
+                 }
+               %>
+
+               <% if (isError) { %>
+                 <!-- Add class error-message for styling in style.css -->
+                 <p class="error-message"><%= entry.aiReflection %></p>
+               <% } else if (isPending) { %>
+                 <!-- Add class status-message for styling in style.css -->
+                 <p class="status-message"><%= entry.aiReflection %></p>
+               <% } else if (mainReflection) { %>
+                 <!-- Add class reflection-text for styling (e.g., pre-wrap) in style.css -->
+                 <p class="reflection-text"><%= mainReflection %></p>
+
+                 <!-- Display the resources section if it exists -->
+                 <% if (resourcesSection) { %>
+                   <div class="resource-section">
+                       <h6>Resources:</h6>
+                       <pre class="resource-text"><%= resourcesSection %></pre>
+                   </div>
+                 <% } %>
+
+               <% } else { %>
+                  <p class="status-message">Reflection available but could not be displayed.</p>
+                  <p class="reflection-text" style="font-size: 0.8em;"><%= entry.aiReflection %></p> <!-- Show raw for debug -->
+               <% } %>
+
+           <% } else { %>
+             <p class="status-message">No reflection available for this entry.</p>
+           <% } %>
+         </div>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>

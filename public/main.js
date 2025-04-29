@@ -1,32 +1,3 @@
-// document.addEventListener('DOMContentLoaded', () => {
-//   const deleteBtns = document.querySelectorAll('.delete-btn');
-
-//   deleteBtns.forEach(btn => {
-//     btn.addEventListener('click', function () {
-//       const messageItem = this.closest('li');
-//       const messageId = messageItem.getAttribute('data-id'); 
-//       console.log('Deleting message with ID:', messageId);
-
-//       // Optional: confirm deletion via page alert - will update to bootstrap component
-//       if (!confirm('Are you sure you want to delete this journal entry?')) {
-//         return; 
-//       }
-
-//       fetch(`/messages/${messageId}`, {
-//         method: 'DELETE'
-//       })
-//       .then(response => response.text())
-//       .then(data => {
-//         console.log(data);
-//         if (data === 'Entry deleted!') {
-//           messageItem.remove();
-//         }
-//       })
-//       .catch(err => console.error('Error deleting entry:', err));
-//     });
-//   });
-// });
-
 document.addEventListener('DOMContentLoaded', function() {
   // Theme toggle
   const themeToggle = document.getElementById('themeToggle');
@@ -108,16 +79,16 @@ document.addEventListener('DOMContentLoaded', function() {
     saveDraftBtn.addEventListener('click', function() {
       // Get form values
       const question1 = document.querySelector('input[name="question1"]').value;
-      const question2 = document.querySelector('input[name="question2"]').value;
-      const question3 = document.querySelector('input[name="question3"]').value;
-      const question4 = document.querySelector('input[name="question4"]').value;
+      // const question2 = document.querySelector('input[name="question2"]').value;
+      // const question3 = document.querySelector('input[name="question3"]').value;
+      // const question4 = document.querySelector('input[name="question4"]').value;
       
       // Save to localStorage
       const draft = {
         question1,
-        question2,
-        question3,
-        question4,
+        // question2,
+        // question3,
+        // question4,
         savedAt: new Date().toISOString()
       };
       

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eremos - Profile</title>
+  <title>Eremos - Find Your Oasis</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="app-container">
@@ -14,31 +14,15 @@
       <div class="sidebar-logo">
         <h1>Eremos</h1>
       </div>
-
       <nav class="sidebar-nav">
-        <a href="/profile" class="nav-link active">
-          <i class="fas fa-book-open"></i>
-          Journal
-        </a>
-        <a href="/history" class="nav-link">
-          <i class="fas fa-history"></i>
-          History
-        </a>
-        <a href="/settings" class="nav-link">
-          <i class="fas fa-cog"></i>
-          Settings
-        </a>
+        <a href="/profile" class="nav-link active"><i class="fas fa-book-open"></i> Journal</a>
+        <!-- Update hrefs if/when you implement these pages -->
+        <a href="#" class="nav-link"><i class="fas fa-history"></i> History</a>
+        <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
       </nav>
-
       <div class="sidebar-footer">
-        <button id="themeToggle" class="theme-btn">
-          <i class="fas fa-sun"></i>
-          <span>Light Mode</span>
-        </button>
-        <a href="/logout" class="logout-btn">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Sign Out</span>
-        </a>
+        <button id="themeToggle" class="theme-btn"><i class="fas fa-sun"></i><i class="fas fa-moon" style="display: none;"></i> <span>Toggle Theme</span></button>
+        <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
       </div>
     </aside>
 
@@ -48,31 +32,16 @@
       <header class="mobile-header">
         <h1>Eremos</h1>
         <div class="header-actions">
-          <button id="mobileThemeToggle" class="icon-btn">
-            <i class="fas fa-sun"></i>
-            <i class="fas fa-moon"></i>
-          </button>
-          <button id="mobileMenuBtn" class="icon-btn">
-            <i class="fas fa-bars"></i>
-          </button>
+          <button id="mobileThemeToggle" class="icon-btn"><i class="fas fa-sun"></i><i class="fas fa-moon" style="display: none;"></i></button>
+          <button id="mobileMenuBtn" class="icon-btn"><i class="fas fa-bars"></i></button>
         </div>
       </header>
 
-      <!-- Mobile Navigation -->
       <div class="mobile-nav">
         <div class="mobile-tabs">
-          <a href="/profile" class="tab-btn active">
-            <i class="fas fa-book-open"></i>
-            Journal
-          </a>
-          <a href="/history" class="tab-btn">
-            <i class="fas fa-history"></i>
-            History
-          </a>
-          <a href="/settings" class="tab-btn">
-            <i class="fas fa-cog"></i>
-            Settings
-          </a>
+          <a href="/profile" class="tab-btn active"><i class="fas fa-book-open"></i> Journal</a>
+          <a href="#" class="tab-btn"><i class="fas fa-history"></i> History</a>
+          <a href="#" class="tab-btn"><i class="fas fa-cog"></i> Settings</a>
         </div>
       </div>
 
@@ -80,45 +49,38 @@
       <div class="content">
         <div class="content-header">
           <h2>Journal</h2>
+           <!-- Display Flash Messages -->
+           <% if (locals.success && success.length > 0) { %>
+             <div class="alert alert-success" role="alert">
+               <%= success %>
+             </div>
+           <% } %>
+           <% if (locals.error && error.length > 0) { %>
+             <div class="alert alert-danger" role="alert">
+               <%= error %>
+             </div>
+           <% } %>
           <p>Write your thoughts and reflections.</p>
         </div>
 
         <!-- Journal Entry Form -->
         <div class="card journal-card">
           <div class="card-header">
-            <h3>
-              <i class="fas fa-edit"></i>
-              Today's Journal Prompt
-            </h3>
-            <p>Reflect on your day with these questions</p>
+            <h3><i class="fas fa-edit"></i> Each entry brings you closer...</h3>
+            <p>Write whatever is on your mind...</p>
           </div>
           <div class="card-body">
+            <!-- Form submits to POST /messages -->
             <form action="/messages" method="POST">
-              <input type="hidden" name="name" value="<%= user.local.email %>">
-              
+              <!-- Removed hidden input for name - User info comes from req.user -->
+
               <div class="form-group">
-                <label for="question1">Question #1</label>
-                <input type="text" id="question1" name="question1" class="form-control" placeholder="What went well today?" required>
+                <label for="entryText">Your Thoughts Today:</label>
+                <textarea id="entryText" name="entryText" class="form-control journal-textarea" placeholder="Enter your thoughts here..." required></textarea>
               </div>
-              
-              <div class="form-group">
-                <label for="question2">Question #2</label>
-                <input type="text" id="question2" name="question2" class="form-control" placeholder="What challenged you today?" required>
-              </div>
-              
-              <div class="form-group">
-                <label for="question3">Question #3</label>
-                <input type="text" id="question3" name="question3" class="form-control" placeholder="What are you grateful for?" required>
-              </div>
-              
-              <div class="form-group">
-                <label for="question4">Question #4</label>
-                <input type="text" id="question4" name="question4" class="form-control" placeholder="What's your intention for tomorrow?" required>
-              </div>
-              
+
               <div class="card-actions">
-                <!-- <button type="button" class="btn btn-outline">Save Draft</button> -->
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit Entry</button> <!-- Updated button text -->
               </div>
             </form>
           </div>
@@ -128,40 +90,45 @@
         <div class="history-section">
           <div class="section-header">
             <h3>Journal History</h3>
-            <!-- <button class="btn btn-outline btn-sm">
-              <i class="fas fa-calendar"></i>
-              View Calendar
-            </button> -->
           </div>
 
           <div class="history-list">
-            <% messages.forEach(function(message) { %>
-              <div class="card history-card" data-id="<%= message._id %>">
-                <div class="card-header">
-                  <div class="card-title">
-                    <h4><%= message.date %> <%= message.time %></h4>
-                    <button class="btn btn-text">View Full Entry</button>
+            <% if (locals.messages && messages.length > 0) { %>
+                <% messages.forEach(function(message) { %>
+                  <div class="card history-card" data-id="<%= message._id %>">
+                    <div class="card-header">
+                      <div class="card-title">
+                        <h4><%= message.displayDate %> at <%= message.displayTime %></h4>
+                        <!-- UPDATED: Link to the detail view -->
+                        <a href="/entries/<%= message._id %>" class="btn btn-text">View Full Entry</a>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <p class="entry-snippet"><%= message.text %></p>
+
+                      <!-- Optional: Indicator if AI reflection exists -->
+                      <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
+                        <p class="reflection-indicator"><i class="fas fa-comment-dots"></i> Reflection available</p>
+                      <% } else if (message.aiReflection) { %>
+                         <p class="reflection-indicator"><i class="fas fa-exclamation-circle"></i> Reflection issue</p>
+                      <% } %>
+                    </div>
+                    <div class="card-footer">
+                      <button class="btn btn-danger btn-sm delete-btn">
+                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div class="card-body">
-                  <p><strong>Question 1:</strong> <%= message.question1 %></p>
-                  <p><strong>Question 2:</strong> <%= message.question2 %></p>
-                  <p><strong>Question 3:</strong> <%= message.question3 %></p>
-                  <p><strong>Question 4:</strong> <%= message.question4 %></p>
-                </div>
-                <div class="card-footer">
-                  <button class="btn btn-danger btn-sm delete-btn">
-                    <i class="fas fa-trash"></i> Delete
-                  </button>
-                </div>
-              </div>
-            <% }); %>
+                <% }); %>
+            <% } else { %>
+                <p>No journal entries found yet. Write your first one above!</p>
+            <% } %>
           </div>
         </div>
       </div>
     </main>
   </div>
 
-  <script src="main.js"></script>
+  <script src="/main.js"></script>
 </body>
 </html>

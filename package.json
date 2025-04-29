@@ -2,6 +2,7 @@
   "name": "node-authentication",
   "main": "server.js",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "bcrypt": "*",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.3",
