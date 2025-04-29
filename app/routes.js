@@ -43,24 +43,29 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
     });
 
     // LOGOUT ==============================
-    // --- TEMPORARY DEBUGGING VERSION ---
+    // routes.js - Logout attempt assuming synchronous req.logout due to bug not allowing me to log out of session
     app.get('/logout', function(req, res, next) {
-        console.log("Attempting logout...");
+        console.log("Attempting logout (sync assumption)...");
         if (!req.isAuthenticated()) {
             console.log("User not authenticated, redirecting.");
             return res.redirect('/auth');
         }
-        req.logout(function(err) {
-            if (err) {
-                console.error("Logout error:", err);
-                return next(err);
+
+        // Call req.logout directly
+        req.logout();
+        console.log("Called req.logout() directly.");
+
+        // session destruction
+        req.session.destroy((destroyErr) => {
+            if (destroyErr) {
+                console.error("Error destroying session during logout:", destroyErr);
+                // Still try to redirect even if session destroy fails
             }
-            console.log('Passport logout function finished.');
+            console.log("Session destroyed (or destroy attempt finished).");
+            res.clearCookie('connect.sid');
             res.redirect('/auth');
         });
-        console.log("Logout route handler finished sync execution.");
     });
-    // --- END TEMPORARY DEBUGGING VERSION ---
 
 
     // journal entry routes ===============================================================
