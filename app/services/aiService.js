@@ -1,72 +1,79 @@
+// app/services/aiService.js (Replace existing function content with this)
+
+// Require the Google Generative AI SDK
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
 
+// Define the function to get the AI reflection
 async function getAIReflection(currentEntryText, historicalEntries = []) { // Default history to empty array
+    // --- 1. Get API Key ---
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
         console.error('Gemini API key not configured in .env file.');
+        // Return a specific error message the route can handle or show user
         return "AI reflection service configuration error (API Key missing).";
     }
 
     try {
         // --- 2. Initialize Gemini Client ---
         const genAI = new GoogleGenerativeAI(apiKey);
-        // Select the appropriate model - check Google's documentation for current free/paid options
-        // gemini-1.5-flash-latest is often a good balance for speed/capability
+        // Select the appropriate model
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
         // --- 3. Construct History Section for Prompt ---
         let historySection = "No recent entries (~ last 30 days) available for context.";
-        if (historicalEntries.length > 0) {
+        if (historicalEntries && historicalEntries.length > 0) { // Added check for historicalEntries existence
             historySection = "User's relevant journal history (~ last 30 days, oldest first):\n\n";
-            historicalEntries.forEach((entry) => { // Removed index as it wasn't used in the string
-                // Check if createdAt exists and format it, provide fallback
+            historicalEntries.forEach((entry) => {
                 const entryDate = entry.createdAt ? new Date(entry.createdAt).toLocaleDateString() : 'Unknown Date';
-                // Ensure combinedText exists and is a string, provide fallback
-                const entryTextContent = entry.combinedText || "";
+                const entryTextContent = entry.combinedText || ""; // Use combinedText from routes.js mapping
                 historySection += `--- Entry from ${entryDate} ---\n${entryTextContent}\n------\n\n`;
             });
         }
 
         // --- 4. Construct the Main Prompt ---
-        // This includes persona, instructions, history, current entry, rules, and resources
-        const prompt = `You are Eremos, an AI journaling assistant acting as a warm, professional, empathetic psychologist/therapist/counselor. Your goal is to provide a thoughtful and nuanced reflection on the user's current journal entry, using history gently for context or identifying significant, recurring patterns. Your goal is to lead them to their "oasis" - Eremos is defined similarly to Jesus being alone in the desert. So many peple are operating alone and are seeking something out there to make life more fulfilling. You are the companion they will walk with through the deserted lands of their mind to find life.
+        // Ensure backticks are clean and variable interpolations are correct
+        const prompt = `You are Eremos, an AI journaling assistant. Act like a warm, understanding, and insightful peer or mentor who is professionally informed but speaks naturally. Your goal is to offer a supportive reflection that feels validating and provides gentle food for thought, acting as a companion guiding the user toward their inner 'oasis' or place of clarity, much like navigating a mental desert to find life.
 
-        ${historySection}
+${historySection}
 
-        Above is the user's recent journal history. Now, here is the user's *current* journal entry:
+Above is the user's recent journal history (~ last 30 days). Now, here is the user's *current* journal entry:
 
-        "${currentEntryText}"
+"${currentEntryText}"
 
-        Your tasks are:
-        1.  Read the *current* entry carefully, paying attention to stated events, feelings, and nuances.
-        2.  Write a reflection on the **current entry** that:
-            *   Acknowledges and validates the key experiences, feelings, and observations mentioned *today*. Touch upon several relevant points shared by the user to show you've processed the details.
-            *   Summarizes the overall tone or main themes emerging from *today's* entry.
-            *   **Use of History (Gentle & Selective):** If you notice a **strong, recurring pattern** (topic/feeling mentioned explicitly 3+ times in history *and* also present today), you may *gently* reference this recurrence (e.g., "It sounds like [topic] continues to be significant..." or "I notice the feeling of [emotion] came up again today..."). Otherwise, keep the focus primarily on the present entry's content. **Do not dwell on history unless it strongly illuminates the present.**
-            *   Maintain a supportive, professional, and warm tone.
-        3.  **Strictly Avoid Advice:** **DO NOT** give behavioral advice, suggestions, commands, or tell the user what they should do or try. Your role is reflection and posing questions.
-            *   **EXCEPTION:** If the *current entry* contains clear language indicating significant distress, hopelessness, self-harm, or immediate safety concerns, keep the reflection brief and *strongly* point towards seeking professional help using the provided resources. Example: "Hearing the depth of your distress today is concerning. Please know support is available. Reaching out to one of the resources below or a trusted professional is crucial."
-        4.  Ask **two or three** open-ended reflective questions directly related to the different aspects discussed in the current entry, encouraging deeper self-exploration.
-        5.  Add the static resource information, separated by markers, *after* your reflection and questions.
-
+Your tasks are:
+1.  Read the *current* entry carefully, noticing the feelings, events, and specific details shared.
+2.  Write a reflection on the **current entry** (approx. 4-6 sentences) that:
+    *   Warmly acknowledges the key experiences or feelings mentioned *today*. Use clear, accessible language – avoid clinical jargon or overly complex words.
+    *   Briefly validates the user's perspective or feelings about the events described.
+    *   **Use of History (Subtle):** If a theme from today strongly echoes something mentioned 3+ times recently, you can *briefly* nod to it (e.g., "Sounds like [topic] is still on your mind," or "That feeling of [emotion] seems familiar from recent entries."). Keep the focus clearly on *today*.
+    *   Maintain a tone that is supportive, empathetic, and maybe even a little encouraging.
+3.  **Strictly Avoid Advice:** **DO NOT** give behavioral advice or tell the user what to do.
+4.  Ask **one or two** relevant, open-ended questions that naturally follow your reflection on today's entry, prompting gentle self-discovery.
+5.  **Resource Guidelines (IMPORTANT):**
+    *   **Default:** DO NOT include any resources by default.
+    *   **Trigger A (Mental Health Concern):** ONLY if the *current entry* contains clear language about significant mental distress (hopelessness, self-harm, seeking therapy, intense negative self-talk, etc.), THEN append the following standard resources section after your questions:
         --- Resources ---
-        If exploring themes like stress management, burnout prevention, work-life balance, or finding professional support could be helpful, consider these resources:
-        *   National Alliance on Mental Illness (NAMI): https://www.nami.org
-        *   Psychology Today Therapist Finder: https://www.psychologytoday.com/us/therapists
-        *   Anxiety & Depression Association of America (ADAA): https://adaa.org
+        If you're going through a particularly tough time, reaching out can make a difference. Consider these options:
+        *   988 Suicide & Crisis Lifeline: Call or text 988 (US & Canada)
+        *   National Alliance on Mental Illness (NAMI): nami.org
+        *   Psychology Today Therapist Finder: psychologytoday.com/us/therapists
         --- End Resources ---
+    *   **Trigger B (Interest/Connection/Wellbeing Mention):** If the *current entry* mentions specific interests (e.g., art, books, coding, music, nature, hobbies), challenges related to connection/loneliness, or goals related to physical wellbeing (e.g., fitness, specific activities), AND Trigger A is NOT met, THEN you MAY suggest *one* relevant resource *type* (not the standard list). Phrase it as a gentle possibility related to their entry. Examples:
+        *   If coding mentioned: "...Maybe exploring local coding meetups (like searching 'tech meetups [user's city if known, otherwise 'your area']') could be interesting?"
+        *   If art/books mentioned: "...Sometimes visiting the local library or art museum website can spark new ideas or connections related to that interest."
+        *   If loneliness mentioned: "...Connecting with others who share your interests, perhaps through online groups or local clubs, is something many find helpful."
+        *   If fitness goal mentioned: "...Finding a supportive community, maybe an online forum or local group related to [activity], can sometimes help with motivation."
+    *   **Priority:** Trigger A (Mental Health Concern) takes priority. If A is met, only show the standard mental health resources. Do not add Trigger B suggestions if Trigger A resources are shown.
+    *   **Format:** If adding resources (A or B), place them after the questions. Use markers only if showing the standard list (Trigger A). For Trigger B suggestions, weave it more naturally into the text or add it as a final sentence without markers.
 
-        Generate the response as plain text. Do not use markdown formatting. Ensure the reflection feels comprehensive yet focused on today's entry.`;
+Generate the response as plain text. Do not use markdown formatting. Focus on warmth, clarity, and relevance.`;
 
 
-        // --- 5. Configure Generation & Safety (Optional but Recommended) ---
+        // --- 5. Configure Generation & Safety ---
          const generationConfig = {
-             temperature: 0.7, // Controls randomness. Lower for more predictable, higher for creative.
-             // maxOutputTokens: 2048, // Example: Limit response length if needed
+             temperature: 0.75,
          };
-
          const safetySettings = [
-             // Adjust thresholds based on your app's tolerance. BLOCK_MEDIUM_AND_ABOVE is a reasonable start.
             { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
             { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
             { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
@@ -74,44 +81,43 @@ async function getAIReflection(currentEntryText, historicalEntries = []) { // De
         ];
 
         // --- 6. Call the Gemini API ---
+        console.log("Sending request to Gemini API...");
         const result = await model.generateContent(
-            prompt,
-            // generationConfig, // Uncomment to use specific generation config
-            // safetySettings    // Uncomment to apply safety settings
+            [prompt], // Pass prompt as array for some models/versions
+            generationConfig,
+            safetySettings
         );
+        console.log("Received response from Gemini API.");
 
         // --- 7. Process the Response ---
-        const response = result.response; // Standard way to get response object
-
-        // Check for safety blocks or other non-STOP finish reasons
+        // Note: Accessing response might differ slightly based on SDK version nuances when sending prompt as array
+        const response = result.response;
         const finishReason = response?.candidates?.[0]?.finishReason;
+
         if (finishReason && finishReason !== 'STOP' && finishReason !== 'MAX_TOKENS') {
-             console.warn(`Gemini generation finished with reason: ${finishReason}. Potential safety block or other issue.`);
-             // Return a user-friendly message indicating potential blocking
-             return `AI reflection generation stopped (Reason: ${finishReason}). This might be due to safety filters. Please review your entry or contact support if needed.`;
+             console.warn(`Gemini generation finished with reason: ${finishReason}.`);
+             return `AI reflection generation stopped (Reason: ${finishReason}).`;
         }
 
-        // Extract the text content safely
-        const reflectionText = response?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const rawReflectionText = response?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        if (reflectionText) {
-            return reflectionText.trim(); // Return the successful reflection
+        if (rawReflectionText) {
+            console.log("Successfully extracted reflection text.");
+            return rawReflectionText.trim();
         } else {
-            // If text extraction fails for some reason
-            console.error('Invalid or unexpected response structure from Gemini:', JSON.stringify(response, null, 2));
+            console.error('Invalid response structure:', JSON.stringify(response, null, 2));
             return "Error: Could not parse the reflection from the AI service.";
         }
 
     } catch (error) {
         // --- 8. Handle API Errors ---
         console.error('Error calling Gemini API:', error);
-        // Provide more specific feedback if possible
         if (error.message && error.message.includes('API key not valid')) {
              return "AI reflection service error: Invalid API Key.";
-        } else if (error.message && error.message.includes('quota')) {
-            return "AI reflection service error: Usage limit reached. Please try again later.";
+        } else if (error.message && (error.message.includes('quota') || (error.response && error.response.status === 429))) {
+            console.warn("Gemini API quota likely exceeded.");
+            return "AI reflection service error: Usage limit reached.";
         }
-        // Generic error for other issues
         return "Sorry, an unexpected error occurred while generating the reflection.";
     }
 }

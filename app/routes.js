@@ -43,24 +43,24 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
     });
 
     // LOGOUT ==============================
-    // Updated for compatibility with newer passport/express-session logout
+    // --- TEMPORARY DEBUGGING VERSION ---
     app.get('/logout', function(req, res, next) {
-        req.logout(function(err) { // Standard logout callback pattern
+        console.log("Attempting logout...");
+        if (!req.isAuthenticated()) {
+            console.log("User not authenticated, redirecting.");
+            return res.redirect('/auth');
+        }
+        req.logout(function(err) {
             if (err) {
                 console.error("Logout error:", err);
-                return next(err); // Pass error to Express error handler
+                return next(err);
             }
-            console.log('User has logged out!');
-            req.session.destroy((err) => { // Explicitly destroy session after logout
-                 if (err) {
-                    console.log("Error destroying session during logout.", err);
-                 }
-                 // Clear the cookie on the client side
-                 res.clearCookie('connect.sid'); // Default session cookie name, adjust if different
-                 res.redirect('/auth'); // Redirect after logout and session destruction
-            });
+            console.log('Passport logout function finished.');
+            res.redirect('/auth');
         });
+        console.log("Logout route handler finished sync execution.");
     });
+    // --- END TEMPORARY DEBUGGING VERSION ---
 
 
     // journal entry routes ===============================================================
