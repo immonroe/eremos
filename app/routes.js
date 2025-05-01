@@ -243,7 +243,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
             const newBookmarkStatus = !entry.isBookmarked; // Toggle boolean (defaults to true if undefined)
 
-            // 3. Update the entry in the database
+            // Update DB entry
             const updateResult = await db.collection('messages').updateOne(
                 { _id: new ObjectId(entryId), createdBy: userId },
                 { $set: { isBookmarked: newBookmarkStatus } }
