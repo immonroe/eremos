@@ -4,6 +4,7 @@ const { getAIReflection } = require('./services/aiService');
 module.exports = function(app, passport, db) { // db is the native MongoDB connection object
 
     // normal routes ===============================================================
+    // refactored index/signup/login ejs files into one auth file
     app.get('/', function(req, res) {
         res.redirect('/auth');
     });
@@ -217,6 +218,82 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 res.status(200).json({ message: 'Entry deleted successfully!' });
             }
         );
+    });
+
+    // bookmark routes ===============================================================
+
+    // POST - Toggle Bookmark Status for an Entry - tested in Postman for bookmark toggle
+    app.post('/entries/:id/toggle-bookmark', isLoggedIn, async (req, res) => {
+        const entryId = req.params.id;
+        const userId = req.user._id;
+
+        if (!ObjectId.isValid(entryId)) {
+            return res.status(400).json({ success: false, message: 'Invalid entry ID format.' });
+        }
+
+        try {
+            const entry = await db.collection('messages').findOne({
+                _id: new ObjectId(entryId),
+                createdBy: userId // Ensure ownership to prevent other users for getting access to bookmarks
+            });
+
+            if (!entry) {
+                return res.status(404).json({ success: false, message: 'Entry not found or permission denied.' });
+            }
+
+            const newBookmarkStatus = !entry.isBookmarked; // Toggle boolean (defaults to true if undefined)
+
+            // 3. Update the entry in the database
+            const updateResult = await db.collection('messages').updateOne(
+                { _id: new ObjectId(entryId), createdBy: userId },
+                { $set: { isBookmarked: newBookmarkStatus } }
+            );
+
+            if (updateResult.modifiedCount === 1) {
+                console.log(`Entry ${entryId} bookmark status toggled to ${newBookmarkStatus} by user ${userId}`);
+                res.status(200).json({ success: true, isBookmarked: newBookmarkStatus });
+            } else {
+                // This might happen if the entry was found but update failed unexpectedly - easy to trace issues in console
+                 console.log(`Entry ${entryId} found but bookmark toggle failed for user ${userId}.`);
+                 res.status(500).json({ success: false, message: 'Failed to update bookmark status.' });
+            }
+
+        } catch (err) {
+            console.error("Error toggling bookmark:", err);
+            res.status(500).json({ success: false, message: 'Server error while toggling bookmark.' });
+        }
+    });
+
+    // GET - Display Bookmarked Entries Page
+    app.get('/bookmarks', isLoggedIn, async (req, res) => {
+        try {
+            // Using built-in find method - we love Express.js
+            const bookmarkedEntries = await db.collection('messages').find({
+                createdBy: req.user._id,
+                isBookmarked: true
+            })
+                .sort({ createdAt: -1 }) // Newest first - may add feature to adjust sort via dropdown menu
+                .toArray();
+
+            const formattedEntries = bookmarkedEntries.map(entry => ({
+                ...entry,
+                displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date,
+                displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time
+            }));
+
+            // Render a new EJS view for bookmarks
+            res.render('bookmarks.ejs', {
+                user: req.user,
+                messages: formattedEntries,
+                 error: req.flash('error'),
+                 success: req.flash('success')
+            });
+
+        } catch (err) {
+            console.error("Error fetching bookmarked entries:", err);
+            req.flash('error', 'Could not load bookmarked entries.');
+            res.redirect('/profile'); // Redirect to profile on error to keep experience clean
+        }
     });
 
     // =============================================================================
