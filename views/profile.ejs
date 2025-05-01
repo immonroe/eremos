@@ -102,6 +102,13 @@
                         <!-- UPDATED: Link to the detail view -->
                         <a href="/entries/<%= message._id %>" class="btn btn-text">View Full Entry</a>
                       </div>
+                      <button class="btn btn-icon bookmark-btn" title="Toggle Bookmark">
+                        <% if (message.isBookmarked) { %>
+                            <i class="fas fa-bookmark"></i> <!-- Font Awesome Solid (filled) -->
+                        <% } else { %>
+                            <i class="far fa-bookmark"></i> <!-- Font Awesome Regular (empty) -->
+                        <% } %>
+                    </button>
                     </div>
                     <div class="card-body">
                       <p class="entry-snippet"><%= message.text %></p>
