@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eremos - Find Your Oasis</title>
+  <title>Eremos - Bookmarks</title> <!-- Specific title -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/style.css">
+  <!-- Link your main stylesheet -->
+  <link rel="stylesheet" href="/style.css"> <!-- Ensure path is correct -->
 </head>
 <body>
   <div class="app-container">
-    <!-- Sidebar (desktop) -->
+    <!-- Sidebar (desktop) - Make 'Bookmarks' link active -->
     <aside class="sidebar">
       <div class="sidebar-logo">
         <h1>Eremos</h1>
       </div>
       <nav class="sidebar-nav">
-        <a href="/profile" class="nav-link active"><i class="fas fa-book-open"></i> Journal</a>
-        <a href="/bookmarks" class="nav-link"><i class="fas fa-bookmark"></i> Bookmarks</a>
+        <a href="/profile" class="nav-link"><i class="fas fa-book-open"></i> Journal</a>
+        <a href="/bookmarks" class="nav-link active"><i class="fas fa-bookmark"></i> Bookmarks</a>
+        <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
       </nav>
       <div class="sidebar-footer">
         <button id="themeToggle" class="theme-btn"><i class="fas fa-sun"></i><i class="fas fa-moon" style="display: none;"></i> <span>Toggle Theme</span></button>
@@ -35,61 +37,28 @@
         </div>
       </header>
 
+      <!-- Mobile Navigation - Make 'Bookmarks' tab active -->
       <div class="mobile-nav">
         <div class="mobile-tabs">
-          <a href="/profile" class="tab-btn active"><i class="fas fa-book-open"></i> Journal</a>
-          <a href="/bookmarks" class="tab-btn"><i class="fas fa-bookmark"></i> Bookmarks</a>
-          <a href="#" class="tab-btn"><i class="fas fa-cog"></i> Settings</a>
+          <a href="/profile" class="tab-btn"><i class="fas fa-book-open"></i> Journal</a>
+          <a href="/bookmarks" class="tab-btn active"><i class="fas fa-bookmark"></i> Bookmarks</a>
         </div>
       </div>
 
       <!-- Content Area -->
       <div class="content">
         <div class="content-header">
-          <h2>Journal</h2>
-           <!-- Display Flash Messages -->
+          <h2>Bookmarks</h2>
            <% if (locals.success && success.length > 0) { %>
-             <div class="alert alert-success" role="alert">
-               <%= success %>
-             </div>
+             <div class="alert alert-success" role="alert"><%= success %></div>
            <% } %>
            <% if (locals.error && error.length > 0) { %>
-             <div class="alert alert-danger" role="alert">
-               <%= error %>
-             </div>
+             <div class="alert alert-danger" role="alert"><%= error %></div>
            <% } %>
-          <p>Write your thoughts and reflections.</p>
+          <p>Revisit your saved reflections.</p>
         </div>
 
-        <!-- Journal Entry Form -->
-        <div class="card journal-card">
-          <div class="card-header">
-            <h3><i class="fas fa-edit"></i> Each entry brings you closer...</h3>
-            <p>Write whatever is on your mind...</p>
-          </div>
-          <div class="card-body">
-            <!-- Form submits to POST /messages -->
-            <form action="/messages" method="POST">
-              <!-- Removed hidden input for name - User info comes from req.user -->
-
-              <div class="form-group">
-                <label for="entryText">Your Thoughts Today:</label>
-                <textarea id="entryText" name="entryText" class="form-control journal-textarea" placeholder="Enter your thoughts here..." required></textarea>
-              </div>
-
-              <div class="card-actions">
-                <button type="submit" class="btn btn-primary">Submit Entry</button> <!-- Updated button text -->
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Journal History -->
         <div class="history-section">
-          <div class="section-header">
-            <h3>Journal History</h3>
-          </div>
-
           <div class="history-list">
             <% if (locals.messages && messages.length > 0) { %>
                 <% messages.forEach(function(message) { %>
@@ -97,21 +66,16 @@
                     <div class="card-header">
                       <div class="card-title">
                         <h4><%= message.displayDate %> at <%= message.displayTime %></h4>
-                        <!-- UPDATED: Link to the detail view -->
                         <a href="/entries/<%= message._id %>" class="btn btn-text">View Full Entry</a>
                       </div>
-                      <button class="btn btn-icon bookmark-btn" title="Toggle Bookmark">
-                        <% if (message.isBookmarked) { %>
-                            <i class="fas fa-bookmark"></i> <!-- Font Awesome Solid (filled) -->
-                        <% } else { %>
-                            <i class="far fa-bookmark"></i> <!-- Font Awesome Regular (empty) -->
-                        <% } %>
-                    </button>
+                      <button class="btn btn-icon bookmark-btn" title="Remove Bookmark">
+                         <i class="fas fa-bookmark"></i>
+                      </button>
                     </div>
                     <div class="card-body">
+                      <!-- Display snippet of the main entry text -->
                       <p class="entry-snippet"><%= message.text %></p>
 
-                      <!-- Optional: Indicator if AI reflection exists -->
                       <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
                         <p class="reflection-indicator"><i class="fas fa-comment-dots"></i> Reflection available</p>
                       <% } else if (message.aiReflection) { %>
@@ -119,6 +83,7 @@
                       <% } %>
                     </div>
                     <div class="card-footer">
+                      <!-- Delete button -->
                       <button class="btn btn-danger btn-sm delete-btn">
                         <i class="fas fa-trash"></i> Delete
                       </button>
@@ -126,7 +91,7 @@
                   </div>
                 <% }); %>
             <% } else { %>
-                <p>No journal entries found yet. Write your first one above!</p>
+                <p>You haven't bookmarked any entries yet. Click the <i class="far fa-bookmark"></i> icon on an entry in your main journal list to save it here.</p>
             <% } %>
           </div>
         </div>
