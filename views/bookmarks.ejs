@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eremos - Bookmarks</title> <!-- Specific title -->
+  <title>Eremos - Bookmarks</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Link your main stylesheet -->
-  <link rel="stylesheet" href="/style.css"> <!-- Ensure path is correct -->
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="app-container">
-    <!-- Sidebar (desktop) - Make 'Bookmarks' link active -->
     <aside class="sidebar">
       <div class="sidebar-logo">
         <h1>Eremos</h1>
@@ -25,9 +23,7 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
-      <!-- Mobile Header -->
       <header class="mobile-header">
         <h1>Eremos</h1>
         <div class="header-actions">
@@ -36,7 +32,6 @@
         </div>
       </header>
 
-      <!-- Mobile Navigation - Make 'Bookmarks' tab active -->
       <div class="mobile-nav">
         <div class="mobile-tabs">
           <a href="/profile" class="tab-btn"><i class="fas fa-book-open"></i> Journal</a>
@@ -44,7 +39,6 @@
         </div>
       </div>
 
-      <!-- Content Area -->
       <div class="content">
         <div class="content-header">
           <h2>Bookmarks</h2>
@@ -72,7 +66,6 @@
                       </button>
                     </div>
                     <div class="card-body">
-                      <!-- Display snippet of the main entry text -->
                       <p class="entry-snippet"><%= message.text %></p>
 
                       <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
@@ -82,7 +75,6 @@
                       <% } %>
                     </div>
                     <div class="card-footer">
-                      <!-- Delete button -->
                       <button class="btn btn-danger btn-sm delete-btn">
                         <i class="fas fa-trash"></i> Delete
                       </button>
