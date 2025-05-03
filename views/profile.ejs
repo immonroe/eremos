@@ -55,6 +55,22 @@
           <p>Write your thoughts and reflections.</p>
         </div>
 
+        <!-- Search Form on Profile -->
+        <div class="search-form-container" style="margin-bottom: 1.5rem;">
+          <form action="/profile" method="GET" class="search-form" style="display: flex;">
+            <input
+              type="search"
+              name="q"                        
+              class="form-control search-input" 
+              style="flex-grow: 1; margin-right: 0.5rem;" 
+              placeholder="Search your entries..."
+              aria-label="Search entries"
+              value="<%= locals.searchTerm || '' %>"
+            >
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+          </form>
+        </div>
+
         <div class="card journal-card">
           <div class="card-header">
             <h3><i class="fas fa-edit"></i> Each entry brings you closer...</h3>
