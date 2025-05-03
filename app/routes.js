@@ -71,7 +71,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
     // journal entry routes ===============================================================
 
-    // POST new entry - MAJOR UPDATE FOR SINGLE INPUT & AI
+    // POST new entry
     app.post('/messages', isLoggedIn, async (req, res) => { // Added isLoggedIn and async
         // 1. Get current entry text (assuming input name="entryText" in profile.ejs form)
         const currentEntryText = req.body.entryText;

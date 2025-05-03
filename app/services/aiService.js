@@ -42,7 +42,7 @@ Above is the user's recent journal history (~ last 30 days). Now, here is the us
 
 Your tasks are:
 1.  Read the *current* entry carefully, noticing the feelings, events, and specific details shared.
-2.  Write a reflection on the **current entry** (approx. 4-6 sentences) that:
+2.  Write a reflection on the **current entry** (approx. 3-5 sentences) that:
     *   Warmly acknowledges the key experiences or feelings mentioned *today*. Use clear, accessible language – avoid clinical jargon or overly complex words.
     *   Briefly validates the user's perspective or feelings about the events described.
     *   **Use of History (Subtle):** If a theme from today strongly echoes something mentioned 3+ times recently, you can *briefly* nod to it (e.g., "Sounds like [topic] is still on your mind," or "That feeling of [emotion] seems familiar from recent entries."). Keep the focus clearly on *today*.
