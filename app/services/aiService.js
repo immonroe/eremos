@@ -48,8 +48,36 @@ async function getAIReflection(currentEntryText, historicalEntries = []) { // De
         **History Context:**
         ${historySection}
 
+<<<<<<< HEAD
         **User's Current Journal Entry:**
         "${safeCurrentEntryText}"
+=======
+Your tasks are:
+1.  Read the *current* entry carefully, noticing the feelings, events, and specific details shared.
+2.  Write a reflection on the **current entry** (approx. 3-5 sentences) that:
+    *   Warmly acknowledges the key experiences or feelings mentioned *today*. Use clear, accessible language – avoid clinical jargon or overly complex words.
+    *   Briefly validates the user's perspective or feelings about the events described.
+    *   **Use of History (Subtle):** If a theme from today strongly echoes something mentioned 3+ times recently, you can *briefly* nod to it (e.g., "Sounds like [topic] is still on your mind," or "That feeling of [emotion] seems familiar from recent entries."). Keep the focus clearly on *today*.
+    *   Maintain a tone that is supportive, empathetic, and maybe even a little encouraging.
+3.  **Strictly Avoid Advice:** **DO NOT** give behavioral advice or tell the user what to do.
+4.  Ask **one or two** relevant, open-ended questions that naturally follow your reflection on today's entry, prompting gentle self-discovery.
+5.  **Resource Guidelines (IMPORTANT):**
+    *   **Default:** DO NOT include any resources by default.
+    *   **Trigger A (Mental Health Concern):** ONLY if the *current entry* contains clear language about significant mental distress (hopelessness, self-harm, seeking therapy, intense negative self-talk, etc.), THEN append the following standard resources section after your questions:
+        --- Resources ---
+        If you're going through a particularly tough time, reaching out can make a difference. Consider these options:
+        *   988 Suicide & Crisis Lifeline: Call or text 988 (US & Canada)
+        *   National Alliance on Mental Illness (NAMI): nami.org
+        *   Psychology Today Therapist Finder: psychologytoday.com/us/therapists
+        --- End Resources ---
+    *   **Trigger B (Interest/Connection/Wellbeing Mention):** If the *current entry* mentions specific interests (e.g., art, books, coding, music, nature, hobbies), challenges related to connection/loneliness, or goals related to physical wellbeing (e.g., fitness, specific activities), AND Trigger A is NOT met, THEN you MAY suggest *one* relevant resource *type* (not the standard list). Phrase it as a gentle possibility related to their entry. Examples:
+        *   If coding mentioned: "...Maybe exploring local coding meetups (like searching 'tech meetups [user's city if known, otherwise 'your area']') could be interesting?"
+        *   If art/books mentioned: "...Sometimes visiting the local library or art museum website can spark new ideas or connections related to that interest."
+        *   If loneliness mentioned: "...Connecting with others who share your interests, perhaps through online groups or local clubs, is something many find helpful."
+        *   If fitness goal mentioned: "...Finding a supportive community, maybe an online forum or local group related to [activity], can sometimes help with motivation."
+    *   **Priority:** Trigger A (Mental Health Concern) takes priority. If A is met, only show the standard mental health resources. Do not add Trigger B suggestions if Trigger A resources are shown.
+    *   **Format:** If adding resources (A or B), place them after the questions. Use markers only if showing the standard list (Trigger A). For Trigger B suggestions, weave it more naturally into the text or add it as a final sentence without markers.
+>>>>>>> 15d59e6d9b0675f34b8ebe27e3cb944081f54268
 
         **Your Response Task:**
         Based *primarily* on the user's **current entry**, craft a reflective response:

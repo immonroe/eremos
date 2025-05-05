@@ -51,6 +51,22 @@
           <p>Revisit your saved reflections.</p>
         </div>
 
+        <!-- Search Form on Bookmarks -->
+        <div class="search-form-container" style="margin-bottom: 1.5rem;">
+          <form action="/bookmarks" method="GET" class="search-form" style="display: flex;"> <!-- ACTION points to /bookmarks -->
+            <input
+              type="search"
+              name="q"
+              class="form-control search-input"
+              style="flex-grow: 1; margin-right: 0.5rem;"
+              placeholder="Search your bookmarks..."
+              aria-label="Search bookmarks"
+              value="<%= locals.searchTerm || '' %>"
+            >
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+          </form>
+        </div>
+
         <div class="history-section">
           <div class="history-list">
             <% if (locals.messages && messages.length > 0) { %>

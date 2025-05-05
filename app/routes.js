@@ -18,26 +18,42 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
-        db.collection('messages').find({ createdBy: req.user._id })
-            .sort({ createdAt: -1 }) // Sort by creation date, newest first
-            .toArray((err, result) => { // Use toArray to get results
+        const userId = req.user._id;
+        const searchTerm = req.query.q; 
+
+        let filter = { createdBy: userId }; 
+        let sortOptions = { createdAt: -1 }; 
+        let projectionOptions = {}; 
+
+        if (searchTerm && searchTerm.trim() !== "") {
+            const trimmedSearchTerm = searchTerm.trim();
+            filter.$text = { $search: trimmedSearchTerm }; 
+            projectionOptions.score = { $meta: "textScore" }; 
+            sortOptions = { score: { $meta: "textScore" } };  
+            console.log(`Searching profile for user ${userId} with term: "${trimmedSearchTerm}"`);
+        } else {
+            console.log(`Fetching all profile entries for user ${userId}`);
+        }
+
+        db.collection('messages').find(filter)
+            .project(projectionOptions)
+            .sort(sortOptions)
+            .toArray((err, result) => {
                 if (err) {
                     console.error("Error fetching profile entries:", err);
                     req.flash('error', 'Could not load journal entries.');
-                    return res.redirect('/profile'); // Prevent rendering if error occurs
+                    return res.redirect('/profile');
                 }
-
                 const formattedEntries = result.map(entry => ({
-                    ...entry, //spread operator
-                    // Use createdAt if available, otherwise fallback to old fields
+                    ...entry, // Keep existing entry data
                     displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date,
                     displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time
                 }));
-
                 res.render('profile.ejs', {
                     user: req.user,
-                    messages: formattedEntries, // Pass potentially formatted entries
-                    error: req.flash('error'), // Pass flash messages from redirects
+                    messages: formattedEntries,
+                    searchTerm: searchTerm, 
+                    error: req.flash('error'),
                     success: req.flash('success')
                 });
             });
@@ -71,7 +87,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
     // journal entry routes ===============================================================
 
-    // POST new entry - MAJOR UPDATE FOR SINGLE INPUT & AI
+    // POST new entry
     app.post('/messages', isLoggedIn, async (req, res) => { // Added isLoggedIn and async
         // 1. Get current entry text (assuming input name="entryText" in profile.ejs form)
         const currentEntryText = req.body.entryText;
@@ -83,7 +99,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
             return res.redirect('/profile');
         }
 
-        let aiReflectionText = "Reflection generation failed or pending..."; // Default value
+        let aiReflectionText = "Reflection generation failed or pending...";
 
         try {
             // 2. Fetch Historical Entries (~ last 30 days) using native driver
@@ -95,14 +111,12 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 createdAt: { $gte: thirtyDaysAgo } // Query based on creation date
              })
                 .sort({ createdAt: 1 }) // Oldest first within the period
-                // Project only needed fields. Ensure 'text' is the correct field name.
                 .project({ text: 1, createdAt: 1, _id: 0 });
 
             const historicalEntriesFromDB = await historyCursor.toArray(); // Execute the query
 
             console.log(`Fetched ${historicalEntriesFromDB.length} historical entries for AI context.`);
 
-            // Map history for the AI service (expects 'combinedText' based on our AI prompt)
             const formattedHistory = historicalEntriesFromDB.map(entry => ({
                 combinedText: entry.text || "", // Use 'text' field, provide default empty string
                 createdAt: entry.createdAt
@@ -115,11 +129,10 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
             // 4. Save the NEW Entry using native driver's insertOne
             const newEntryDoc = {
-                text: currentEntryText,           // Save the single entry text field
-                aiReflection: aiReflectionText,    // Save the AI's response
-                createdBy: userId,                // Link to the user
-                createdAt: new Date()             // Add timestamp for sorting/querying
-                // Ensure old fields like question1, date, time are NOT saved here anymore
+                text: currentEntryText,   
+                aiReflection: aiReflectionText, 
+                createdBy: userId,               
+                createdAt: new Date()             
             };
 
             const insertResult = await db.collection('messages').insertOne(newEntryDoc);
@@ -128,7 +141,6 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 console.log('Journal entry with reflection saved successfully.');
                 req.flash('success', 'Journal entry saved successfully!');
             } else {
-                 // This case should ideally not happen if insertOne doesn't throw, but good practice
                  throw new Error("Failed to insert new entry into database (insertedCount not 1).");
             }
             res.redirect('/profile'); // Redirect back to the profile page
@@ -136,7 +148,6 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
         } catch (err) {
             console.error("Error processing new entry:", err);
             req.flash('error', 'Failed to save entry or get reflection. Please try again.');
-            // Optional: Attempt to save entry even if AI/DB fails, marking reflection as failed
              try {
                  const fallbackEntryDoc = {
                      text: currentEntryText,
@@ -154,7 +165,6 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
         }
     });
 
-     // GET single entry detail page (NEW ROUTE)
     app.get('/entries/:id', isLoggedIn, async (req, res) => {
          try {
              const entryId = req.params.id;
@@ -266,33 +276,48 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
     // GET - Display Bookmarked Entries Page
     app.get('/bookmarks', isLoggedIn, async (req, res) => {
+        const userId = req.user._id;
+        const searchTerm = req.query.q;
+
+        let filter = { createdBy: userId, isBookmarked: true };
+        let sortOptions = { createdAt: -1 }; // Default sort
+        let projectionOptions = {}; // Default projection
+
+        // Modify filter/projection/sort if searching
+        if (searchTerm && searchTerm.trim() !== "") {
+            const trimmedSearchTerm = searchTerm.trim();
+            filter.$text = { $search: trimmedSearchTerm };
+            projectionOptions.score = { $meta: "textScore" };
+            sortOptions = { score: { $meta: "textScore" } };
+            console.log(`Searching bookmarks for user ${userId} with term: "${trimmedSearchTerm}"`);
+        } else {
+            console.log(`Fetching all bookmarks for user ${userId}`);
+        }
+
         try {
-            // Using built-in find method - we love Express.js
-            const bookmarkedEntries = await db.collection('messages').find({
-                createdBy: req.user._id,
-                isBookmarked: true
-            })
-                .sort({ createdAt: -1 }) // Newest first - may add feature to adjust sort via dropdown menu
+            const bookmarkedEntries = await db.collection('messages').find(filter)
+                .project(projectionOptions)
+                .sort(sortOptions)
                 .toArray();
 
             const formattedEntries = bookmarkedEntries.map(entry => ({
-                ...entry,
+                ...entry, // Keep existing entry data
                 displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date,
                 displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time
             }));
 
-            // Render a new EJS view for bookmarks
             res.render('bookmarks.ejs', {
                 user: req.user,
                 messages: formattedEntries,
-                 error: req.flash('error'),
-                 success: req.flash('success')
+                searchTerm: searchTerm, // Pass term back to view
+                error: req.flash('error'),
+                success: req.flash('success')
             });
 
         } catch (err) {
             console.error("Error fetching bookmarked entries:", err);
             req.flash('error', 'Could not load bookmarked entries.');
-            res.redirect('/profile'); // Redirect to profile on error to keep experience clean
+            res.redirect('/profile');
         }
     });
 
