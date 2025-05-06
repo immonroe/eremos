@@ -6,19 +6,17 @@
   <title>Eremos - Entry Details</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/style.css">
-  <!-- <link rel="stylesheet" href="/css/output.css"> -->
-
 </head>
 <body>
 
   <main class="main-content single-entry-view">
     <div class="content">
-      <div class="content-header">
+      <div class="content-header d-flex justify-content-between align-items-center">
         <h2>Journal Entry from <%= locals.displayDate || 'Unknown Date' %> at <%= locals.displayTime || 'Unknown Time' %></h2>
-        <a href="/profile" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;"><i class="fas fa-arrow-left"></i> Back to Journal List</a>
-      </div>
+        <a href="/profile" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">
+          <i class="fas fa-arrow-left"></i> Back to Journal List
+        </a>
 
-      <!-- Display User's Entry -->
       <div class="card entry-details-card mb-4">
         <div class="card-header">
            <h5 class="mb-0">Your Thoughts</h5>
@@ -32,7 +30,6 @@
         </div>
       </div>
 
-      <!-- Display AI Reflection -->
       <div class="card reflection-card">
          <div class="card-header">
            <h5 class="mb-0">Eremos Reflection</h5>
@@ -40,7 +37,6 @@
          <div class="card-body">
            <% if (locals.entry && entry.aiReflection) { %>
                <%
-                 // Check for known error/status messages from aiService
                  const isError = entry.aiReflection.includes('Error:') || entry.aiReflection.includes('failed') || entry.aiReflection.includes('unavailable') || entry.aiReflection.includes('stopped');
                  const isPending = entry.aiReflection.includes('pending');
                  let mainReflection = '';
@@ -83,5 +79,7 @@
 
     </div>
   </main>
+
+  <script src="/main.js" defer></script>
 </body>
 </html>
