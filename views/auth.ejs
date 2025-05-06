@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eremos - Authentication</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="auth.css">
 </head>
 <body>
   <div class="auth-container">
@@ -27,12 +26,11 @@
 
       <div class="auth-tabs">
         <div class="tab-header">
-          <button class="tab-btn active" data-tab="login">Login</button>
-          <button class="tab-btn" data-tab="signup">Sign Up</button>
+          <button class="tab-btn active" data-tab="login"><span class="underline">Login</span></button>
+          <button class="tab-btn" data-tab="signup"><span class="underline">Sign Up</span></button>
         </div>
 
         <div class="tab-content">
-          <!-- Login Form -->
           <div class="tab-pane active" id="login">
             <% if (typeof message !== 'undefined' && message.length > 0) { %>
               <div class="alert alert-danger"><%= message %></div>
@@ -60,7 +58,6 @@
             </div>
           </div>
 
-          <!-- Signup Form -->
           <div class="tab-pane" id="signup">
             <% if (typeof message !== 'undefined' && message.length > 0) { %>
               <div class="alert alert-danger"><%= message %></div>
