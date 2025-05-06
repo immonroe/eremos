@@ -321,6 +321,20 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
         }
     });
 
+    // activity routes ===============================================================
+    
+    app.get('/activity', isLoggedIn, async (req, res) => {
+        try {
+            res.render('activity', { 
+                title: 'Activity Dashboard',
+                user: req.user
+            });
+        } catch (err) {
+            console.error('Error loading activity page:', err);
+            res.redirect('/profile'); // Redirect to dashboard or another page on error
+        }
+    });
+
     // =============================================================================
     // AUTHENTICATE (Keep existing passport routes)
     // =============================================================================
