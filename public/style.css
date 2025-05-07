@@ -400,6 +400,10 @@ p {
   display: inline-block;
 }
 
+.dark .theme-btn {
+  color: var(--secondary-foreground);
+}
+
 .logout-btn {
   color: var(--destructive);
 }
