@@ -110,9 +110,13 @@
                       <p class="entry-snippet"><%= message.text %></p>
 
                       <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
-                        <p class="reflection-indicator"><i class="fas fa-comment-dots"></i> Reflection available</p>
+                        <div class="reflection-badge">
+                          <i class="fas fa-comment-dots"></i> Reflection available
+                        </div>
                       <% } else if (message.aiReflection) { %>
-                         <p class="reflection-indicator"><i class="fas fa-exclamation-circle"></i> Reflection issue</p>
+                        <div class="reflection-badge warning">
+                          <i class="fas fa-exclamation-circle"></i> Reflection issue
+                        </div>
                       <% } %>
                     </div>
                     <div class="card-footer">
