@@ -1,5 +1,3 @@
-// public/main.js
-
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM fully loaded and parsed');
 
@@ -13,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function applyTheme(theme) {
      if (theme === 'dark') {
          document.documentElement.classList.add('dark');
-         if (themeText) themeText.textContent = 'Light Mode'; // Update desktop button text
+         if (themeText) themeText.textContent = 'Light Mode';
      } else {
          document.documentElement.classList.remove('dark');
-         if (themeText) themeText.textContent = 'Dark Mode'; // Update desktop button text
+         if (themeText) themeText.textContent = 'Dark Mode';
      }
   }
   applyTheme(savedTheme === 'dark' || (!savedTheme && prefersDark) ? 'dark' : 'light');
@@ -24,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function toggleTheme() {
     const isCurrentlyDark = document.documentElement.classList.contains('dark');
     const newTheme = isCurrentlyDark ? 'light' : 'dark';
-    applyTheme(newTheme); // Apply the new theme visually
-    localStorage.setItem('theme', newTheme); // Save the preference
+    applyTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   }
 
   if (themeToggle) {
@@ -37,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const sidebar = document.querySelector('.sidebar'); // Target the sidebar element
+  const sidebar = document.querySelector('.sidebar');
 
   if (mobileMenuBtn && sidebar) {
     mobileMenuBtn.addEventListener('click', function() {
@@ -46,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
-  const historyListContainer = document.querySelector('.history-list'); // Get the parent container
+  const historyListContainer = document.querySelector('.history-list');
 
   if (historyListContainer) {
 
@@ -76,12 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const response = await fetch(`/entries/${entryId}/toggle-bookmark`, { method: 'POST' });
                 const data = await response.json(); // Expect a JSON response
 
-                // Check for network or server errors (status code not 2xx)
                 if (!response.ok) { throw new Error(data.message || `Server error: ${response.status}`); }
 
-                // Check the success flag from the server's JSON response
                 if (data.success) {
-                    // Update the icon visually based on the new state returned by the server
                     if (data.isBookmarked) {
                         icon.classList.remove('far');
                         icon.classList.add('fas');
@@ -103,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Delegated: Error during fetch for bookmark toggle:', error);
                 alert(`An error occurred: ${error.message}`);
             }
-            return; // Stop processing this click event since we handled the bookmark action
+            return;
         }
 
 
@@ -111,10 +106,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const deleteButton = event.target.closest('.delete-btn');
         if (deleteButton) {
             console.log('Delete button clicked via delegation');
-            event.preventDefault(); // Prevent any default browser action
+            event.preventDefault(); 
 
             const entryCard = deleteButton.closest('.history-card');
-            const entryId = entryCard ? entryCard.dataset.id : null; // Get ID from data-id
+            const entryId = entryCard ? entryCard.dataset.id : null;
 
             if (!entryId) {
                 console.error('Delegated: Could not find entry ID for delete.');
@@ -145,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(`An error occurred while deleting: ${error.message}`);
                 }
             } else {
-                // User clicked 'Cancel' on the confirmation dialog
                 console.log('Delegated: Delete cancelled by user.');
             }
             return; 
