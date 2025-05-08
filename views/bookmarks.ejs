@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eremos - Bookmarks</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- <link rel="stylesheet" href="/output.css"> -->
 </head>
 <body>
@@ -76,58 +76,67 @@
           <p>Revisit your saved reflections.</p>
         </div>
 
-        <!-- Search Form on Bookmarks -->
-        <div class="search-form-container" style="margin-bottom: 1.5rem;">
-          <form action="/bookmarks" method="GET" class="search-form" style="display: flex;"> <!-- ACTION points to /bookmarks -->
-            <input
-              type="search"
-              name="q"
-              class="form-control search-input"
-              style="flex-grow: 1; margin-right: 0.5rem;"
-              placeholder="Search your bookmarks..."
-              aria-label="Search bookmarks"
-              value="<%= locals.searchTerm || '' %>"
-            >
-            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        <div class="search-container">
+          <form action="/bookmarks" method="GET" class="search-form">
+            <div class="input-group">
+              <input
+                type="search"
+                name="q"                        
+                class="form-control" 
+                placeholder="Search your bookmarks..."
+                aria-label="Search bookmarks"
+                value="<%= locals.searchTerm || '' %>"
+              >
+              <button class="btn btn-search" type="submit">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+              </button>
+            </div>
           </form>
         </div>
 
         <div class="history-section">
           <div class="history-list">
             <% if (locals.messages && messages.length > 0) { %>
-                <% messages.forEach(function(message) { %>
-                  <div class="card history-card" data-id="<%= message._id %>">
-                    <div class="card-header">
-                      <div class="card-title">
-                        <h4><%= message.displayDate %> at <%= message.displayTime %></h4>
-                        <a href="/entries/<%= message._id %>" class="btn btn-text">View Full Entry</a>
+              <% messages.forEach(function(message) { %>
+                <div class="card history-card" data-id="<%= message._id %>">
+                  <div class="card-header">
+                    <div class="card-title">
+                      <h4><i class="far fa-calendar-alt"></i> <%= message.displayDate %> at <%= message.displayTime %></h4>
+                      <div class="card-actions">
+                        <a href="/entries/<%= message._id %>" class="btn btn-text">
+                          <i class="fas fa-eye"></i> View Full Entry
+                        </a>
+                        <button class="btn btn-icon bookmark-btn" title="Remove Bookmark">
+                          <i class="fas fa-bookmark"></i>
+                        </button>
                       </div>
-                      <button class="btn btn-icon bookmark-btn" title="Remove Bookmark">
-                         <i class="fas fa-bookmark"></i>
-                      </button>
-                    </div>
-                    <div class="card-body">
-                      <p class="entry-snippet"><%= message.text %></p>
-
-                      <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
-                        <div class="reflection-badge">
-                          <i class="fas fa-comment-dots"></i> Reflection available
-                        </div>
-                      <% } else if (message.aiReflection) { %>
-                        <div class="reflection-badge warning">
-                          <i class="fas fa-exclamation-circle"></i> Reflection issue
-                        </div>
-                      <% } %>
-                    </div>
-                    <div class="card-footer">
-                      <button class="btn btn-danger btn-sm delete-btn">
-                        <i class="fas fa-trash"></i> Delete
-                      </button>
                     </div>
                   </div>
-                <% }); %>
+                  <div class="card-body">
+                    <p class="entry-snippet"><%= message.text %></p>
+                    <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
+                      <div class="reflection-badge">
+                        <i class="fas fa-comment-dots"></i> Reflection available
+                      </div>
+                    <% } else if (message.aiReflection) { %>
+                      <div class="reflection-badge warning">
+                        <i class="fas fa-exclamation-circle"></i> Reflection issue
+                      </div>
+                    <% } %>
+                  </div>
+                  <div class="card-footer">
+                    <button class="btn btn-danger btn-sm delete-btn">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              <% }); %>
             <% } else { %>
+              <div class="empty-state">
+                <i class="far fa-bookmark"></i>
                 <p>You haven't bookmarked any entries yet. Click the <i class="far fa-bookmark"></i> icon on an entry in your main journal list to save it here.</p>
+              </div>
             <% } %>
           </div>
         </div>
