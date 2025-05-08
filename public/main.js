@@ -156,6 +156,4 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     console.warn('Element with class .history-list not found. Delete/Bookmark listeners not attached.');
   }
-
-
 });

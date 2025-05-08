@@ -1,7 +1,7 @@
-const { ObjectId } = require('mongodb'); // For handling MongoDB ObjectIDs
+const { ObjectId } = require('mongodb');
 const { getAIReflection } = require('./services/aiService');
 
-module.exports = function(app, passport, db) { // db is the native MongoDB connection object
+module.exports = function(app, passport, db) {
 
     // normal routes ===============================================================
     // refactored index/signup/login ejs files into one auth file
@@ -45,7 +45,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                     return res.redirect('/profile');
                 }
                 const formattedEntries = result.map(entry => ({
-                    ...entry, // Keep existing entry data
+                    ...entry, // spread op
                     displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date,
                     displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time
                 }));
@@ -68,11 +68,9 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
             return res.redirect('/auth');
         }
 
-        // Call req.logout directly
         req.logout();
         console.log("Called req.logout() directly.");
 
-        // session destruction
         req.session.destroy((destroyErr) => {
             if (destroyErr) {
                 console.error("Error destroying session during logout:", destroyErr);
@@ -88,10 +86,9 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
     // journal entry routes ===============================================================
 
     // POST new entry
-    app.post('/messages', isLoggedIn, async (req, res) => { // Added isLoggedIn and async
-        // 1. Get current entry text (assuming input name="entryText" in profile.ejs form)
+    app.post('/messages', isLoggedIn, async (req, res) => {
         const currentEntryText = req.body.entryText;
-        const userId = req.user._id; // Get user ID from authenticated session
+        const userId = req.user._id;
 
         // Basic validation
         if (!currentEntryText || currentEntryText.trim() === "") {
@@ -102,7 +99,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
         let aiReflectionText = "Reflection generation failed or pending...";
 
         try {
-            // 2. Fetch Historical Entries (~ last 30 days) using native driver
+            // 2. Fetch Historical Entries (~ last 30 days)
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(new Date().getDate() - 30);
 
@@ -110,7 +107,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 createdBy: userId,
                 createdAt: { $gte: thirtyDaysAgo } // Query based on creation date
              })
-                .sort({ createdAt: 1 }) // Oldest first within the period
+                .sort({ createdAt: 1 })
                 .project({ text: 1, createdAt: 1, _id: 0 });
 
             const historicalEntriesFromDB = await historyCursor.toArray(); // Execute the query
@@ -122,12 +119,10 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 createdAt: entry.createdAt
             }));
 
-            // 3. Call the AI Service
             console.log("Requesting AI reflection...");
             aiReflectionText = await getAIReflection(currentEntryText, formattedHistory);
             console.log("AI reflection received.");
 
-            // 4. Save the NEW Entry using native driver's insertOne
             const newEntryDoc = {
                 text: currentEntryText,   
                 aiReflection: aiReflectionText, 
@@ -143,7 +138,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
             } else {
                  throw new Error("Failed to insert new entry into database (insertedCount not 1).");
             }
-            res.redirect('/profile'); // Redirect back to the profile page
+            res.redirect('/profile');
 
         } catch (err) {
             console.error("Error processing new entry:", err);
@@ -152,15 +147,15 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                  const fallbackEntryDoc = {
                      text: currentEntryText,
                      createdBy: userId,
-                     aiReflection: "AI reflection generation failed.", // Specific error message
+                     aiReflection: "AI reflection generation failed.", // Specific error message so easier to trace issue
                      createdAt: new Date()
                  };
                  await db.collection('messages').insertOne(fallbackEntryDoc);
                  console.log("Saved entry with AI failure notice.");
-                 res.redirect('/profile'); // Redirect after saving fallback
+                 res.redirect('/profile');
             } catch (saveErr) {
                  console.error("Failed to save fallback entry:", saveErr);
-                 res.redirect('/profile'); // Still redirect if fallback save fails too
+                 res.redirect('/profile');
             }
         }
     });
@@ -168,16 +163,14 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
     app.get('/entries/:id', isLoggedIn, async (req, res) => {
          try {
              const entryId = req.params.id;
-             // Validate ObjectId format before querying
              if (!ObjectId.isValid(entryId)) {
                  req.flash('error', 'Invalid entry ID format.');
                  return res.redirect('/profile');
              }
 
-             // Fetch using native driver, ensuring user owns it
              const entry = await db.collection('messages').findOne({
                  _id: new ObjectId(entryId),
-                 createdBy: req.user._id // Check ownership
+                 createdBy: req.user._id
              });
 
              if (!entry) {
@@ -190,8 +183,8 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                  user: req.user,
                  entry: entry,
                  // Pass formatted date/time for display
-                 displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date, // Fallback for older entries
-                 displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time // Fallback
+                 displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date,
+                 displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time
              });
          } catch (err) {
             console.error("Error fetching single entry:", err);
@@ -204,27 +197,21 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
     // DELETE entry - Updated to check ownership and send JSON response
     app.delete('/messages/:id', isLoggedIn, (req, res) => {
         const entryId = req.params.id;
-        // Basic validation for ObjectId
         if (!ObjectId.isValid(entryId)) {
-             // Send JSON error response for client-side JS
              return res.status(400).json({ message: 'Invalid entry ID format.' });
         }
 
         db.collection('messages').deleteOne(
-            // Match _id AND ensure the logged-in user created the entry
             { _id: new ObjectId(entryId), createdBy: req.user._id },
             (err, result) => {
                 if (err) {
                     console.error("Error deleting entry:", err);
                     return res.status(500).json({ message: 'Error deleting entry.' });
                 }
-                // Check if a document was actually deleted
                 if (result.deletedCount === 0) {
-                     // Could be because ID doesn't exist OR user doesn't own it
                      return res.status(404).json({ message: 'Entry not found or permission denied.' });
                 }
                 console.log(`Entry ${entryId} deleted by user ${req.user._id}`);
-                // Send success JSON response
                 res.status(200).json({ message: 'Entry deleted successfully!' });
             }
         );
@@ -244,16 +231,15 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
         try {
             const entry = await db.collection('messages').findOne({
                 _id: new ObjectId(entryId),
-                createdBy: userId // Ensure ownership to prevent other users for getting access to bookmarks
+                createdBy: userId
             });
 
             if (!entry) {
                 return res.status(404).json({ success: false, message: 'Entry not found or permission denied.' });
             }
 
-            const newBookmarkStatus = !entry.isBookmarked; // Toggle boolean (defaults to true if undefined)
+            const newBookmarkStatus = !entry.isBookmarked;
 
-            // Update DB entry
             const updateResult = await db.collection('messages').updateOne(
                 { _id: new ObjectId(entryId), createdBy: userId },
                 { $set: { isBookmarked: newBookmarkStatus } }
@@ -263,7 +249,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 console.log(`Entry ${entryId} bookmark status toggled to ${newBookmarkStatus} by user ${userId}`);
                 res.status(200).json({ success: true, isBookmarked: newBookmarkStatus });
             } else {
-                // This might happen if the entry was found but update failed unexpectedly - easy to trace issues in console
+                // Helps trace issue bc errors sometimes ddon't even show
                  console.log(`Entry ${entryId} found but bookmark toggle failed for user ${userId}.`);
                  res.status(500).json({ success: false, message: 'Failed to update bookmark status.' });
             }
@@ -280,10 +266,9 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
         const searchTerm = req.query.q;
 
         let filter = { createdBy: userId, isBookmarked: true };
-        let sortOptions = { createdAt: -1 }; // Default sort
-        let projectionOptions = {}; // Default projection
+        let sortOptions = { createdAt: -1 }; 
+        let projectionOptions = {}; 
 
-        // Modify filter/projection/sort if searching
         if (searchTerm && searchTerm.trim() !== "") {
             const trimmedSearchTerm = searchTerm.trim();
             filter.$text = { $search: trimmedSearchTerm };
@@ -301,7 +286,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
                 .toArray();
 
             const formattedEntries = bookmarkedEntries.map(entry => ({
-                ...entry, // Keep existing entry data
+                ...entry, // spread operator
                 displayDate: entry.createdAt ? entry.createdAt.toLocaleDateString() : entry.date,
                 displayTime: entry.createdAt ? entry.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : entry.time
             }));
@@ -309,7 +294,7 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
             res.render('bookmarks.ejs', {
                 user: req.user,
                 messages: formattedEntries,
-                searchTerm: searchTerm, // Pass term back to view
+                searchTerm: searchTerm,
                 error: req.flash('error'),
                 success: req.flash('success')
             });
@@ -323,17 +308,215 @@ module.exports = function(app, passport, db) { // db is the native MongoDB conne
 
     // activity routes ===============================================================
     
+    // Enhanced route to fetch data for activity charts
     app.get('/activity', isLoggedIn, async (req, res) => {
         try {
+            const userId = req.user._id;
+            
+            // yoink all user's journal entries
+            const messages = await db.collection('messages').find({ createdBy: userId })
+                .sort({ createdAt: -1 })
+                .toArray();
+                
+            // Calculate entry counts by day of week
+            const dayOfWeekData = [0, 0, 0, 0, 0, 0, 0]; // Sun to Sat
+            messages.forEach(msg => {
+                if (msg.createdAt) {
+                    const day = new Date(msg.createdAt).getDay();
+                    dayOfWeekData[day]++;
+                }
+            });
+            
+            // Calculate entries per month (last 6 months - may need to shorten this but idk)
+            const today = new Date();
+            const monthLabels = [];
+            const monthData = [];
+            
+            for (let i = 5; i >= 0; i--) {
+                const month = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                const monthName = month.toLocaleString('default', { month: 'short' });
+                monthLabels.push(monthName);
+                
+                const monthStart = new Date(month.getFullYear(), month.getMonth(), 1);
+                const monthEnd = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+                
+                const count = messages.filter(msg => {
+                    if (!msg.createdAt) return false;
+                    const date = new Date(msg.createdAt);
+                    return date >= monthStart && date <= monthEnd;
+                }).length;
+                
+                monthData.push(count);
+            }
+            
+            // Calculate entry length over time (last 10 entries)
+            const recentMessages = messages.slice(0, Math.min(10, messages.length)).reverse();
+            const entryLengths = recentMessages.map(msg => msg.text ? msg.text.length : 0);
+            const entryDates = recentMessages.map(msg => {
+                if (!msg.createdAt) return 'Unknown';
+                const date = new Date(msg.createdAt);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            });
+            
+            const bookmarkedCount = messages.filter(msg => msg.isBookmarked).length;
+            const totalEntries = messages.length;
+            
+            let avgEntriesPerWeek = 0;
+            if (messages.length > 0) {
+                const oldestEntry = messages.length > 0 ? new Date(messages[messages.length - 1].createdAt) : new Date();
+                const diffTime = Math.abs(today - oldestEntry);
+                const diffWeeks = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7)));
+                avgEntriesPerWeek = (totalEntries / diffWeeks).toFixed(1);
+            }
+            
+            // Calculate streak data (consecutive days with entries)
+            const streakData = calculateStreakData(messages);
+            
+            // Create the chart data object
+            const chartData = {
+                dayOfWeekData,
+                monthLabels,
+                monthData,
+                entryLengths,
+                entryDates,
+                bookmarkedCount,
+                totalEntries,
+                avgEntriesPerWeek,
+                streakData
+            };
+            
+            console.log('Chart data being sent to template:', JSON.stringify(chartData, null, 2));
+            
+            const hasData = totalEntries > 0;
+            if (!hasData) {
+                console.log('No journal entries found for user. Using sample data for charts.');
+                // In case bug where things don't show
+                chartData.dayOfWeekData = [1, 2, 3, 2, 4, 3, 2];
+                chartData.monthData = [2, 3, 5, 4, 6, 3];
+                chartData.entryLengths = [100, 150, 200, 180, 250];
+                chartData.entryDates = ['Jan 1', 'Jan 5', 'Jan 10', 'Jan 15', 'Jan 20'];
+            }
+            
             res.render('activity', { 
                 title: 'Activity Dashboard',
-                user: req.user
+                user: req.user,
+                chartData: chartData,
+                hasData: hasData
             });
         } catch (err) {
             console.error('Error loading activity page:', err);
-            res.redirect('/profile'); // Redirect to dashboard or another page on error
+            // In case bug where things don't show
+            const fallbackData = {
+                dayOfWeekData: [1, 2, 3, 2, 4, 3, 2],
+                monthLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                monthData: [2, 3, 5, 4, 6, 3],
+                entryLengths: [100, 150, 200, 180, 250],
+                entryDates: ['Jan 1', 'Jan 5', 'Jan 10', 'Jan 15', 'Jan 20'],
+                bookmarkedCount: 3,
+                totalEntries: 10,
+                avgEntriesPerWeek: 2.5,
+                streakData: { currentStreak: 2, longestStreak: 5 }
+            };
+            
+            res.render('activity', { 
+                title: 'Activity Dashboard',
+                user: req.user,
+                chartData: fallbackData,
+                hasData: false,
+                error: 'There was an error loading your activity data. Showing sample data instead.'
+            });
         }
     });
+
+    // Helper function to calculate streak data
+    function calculateStreakData(messages) {
+        if (messages.length === 0) return { currentStreak: 0, longestStreak: 0 };
+        
+        const sortedMsgs = [...messages].sort((a, b) => 
+            new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        
+        // Get unique dates (considers weird intraction if you put more than one entry per day)
+        const uniqueDates = new Set();
+        sortedMsgs.forEach(msg => {
+            if (msg.createdAt) {
+                const date = new Date(msg.createdAt);
+                uniqueDates.add(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+            }
+        });
+        
+        // Convert to array of Date objects
+        const dates = Array.from(uniqueDates).map(dateStr => {
+            const [year, month, day] = dateStr.split('-').map(num => parseInt(num));
+            return new Date(year, month - 1, day);
+        }).sort((a, b) => b - a);
+        
+        let currentStreak = 1;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const mostRecentDate = dates.length > 0 ? dates[0] : null;
+        if (!mostRecentDate) return { currentStreak: 0, longestStreak: 0 };
+        
+        mostRecentDate.setHours(0, 0, 0, 0);
+        
+        const hasEntryToday = mostRecentDate.getTime() === today.getTime();
+        if (!hasEntryToday) {
+            // Check if there was an entry yesterday to maintain streak
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (mostRecentDate.getTime() !== yesterday.getTime()) {
+                currentStreak = 0;
+            }
+        }
+        
+        if (currentStreak > 0) {
+            for (let i = 1; i < dates.length; i++) {
+                const current = dates[i];
+                const prev = dates[i - 1];
+                
+                current.setHours(0, 0, 0, 0);
+                prev.setHours(0, 0, 0, 0);
+                
+                const diffDays = Math.round((prev - current) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    currentStreak++;
+                } else {
+                    break;
+                }
+            }
+        }
+        
+        let longestStreak = currentStreak;
+        let tempStreak = 1;
+        
+        for (let i = 1; i < dates.length; i++) {
+            const current = dates[i];
+            const prev = dates[i - 1];
+            
+            current.setHours(0, 0, 0, 0);
+            prev.setHours(0, 0, 0, 0);
+            
+            const diffDays = Math.round((prev - current) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                tempStreak++;
+            } else {
+                if (tempStreak > longestStreak) {
+                    longestStreak = tempStreak;
+                }
+                tempStreak = 1;
+            }
+        }
+        
+        if (tempStreak > longestStreak) {
+            longestStreak = tempStreak;
+        }
+        
+        return { currentStreak, longestStreak };
+    }
 
     // =============================================================================
     // AUTHENTICATE (Keep existing passport routes)

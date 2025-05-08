@@ -3,199 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eremos - Activity</title>
+  <title>Eremos - <%= title %></title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                <h1>Eremos</h1>
-                <p class="tagline">Find your oasis</p>
-                </div>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>Eremos</h1>
+          <p class="tagline">Find your oasis</p>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="/profile" class="nav-link">
+          <i class="fas fa-book-open"></i> 
+          <span>Journal</span>
+        </a>
+        <a href="/bookmarks" class="nav-link">
+          <i class="fas fa-bookmark"></i> 
+          <span>Bookmarks</span>
+        </a>
+        <a href="/activity" class="nav-link active">
+          <i class="fas fa-chart-line"></i> 
+          <span>Activity</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="theme-btn">
+          <i class="fas fa-sun"></i>
+          <i class="fas fa-moon"></i> 
+          <span>Toggle Theme</span>
+        </button>
+        <a href="/logout" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> 
+          <span>Sign Out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Mobile Header -->
+      <header class="mobile-header">
+        <div class="mobile-logo">
+          <h1>Eremos</h1>
+        </div>
+        <div class="header-actions">
+          <button id="mobileThemeToggle" class="icon-btn">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+          </button>
+          <button id="mobileMenuBtn" class="icon-btn">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Mobile Navigation -->
+      <div class="mobile-nav">
+        <div class="mobile-tabs">
+          <a href="/profile" class="tab-btn">
+            <i class="fas fa-book-open"></i> 
+            <span>Journal</span>
+          </a>
+          <a href="/bookmarks" class="tab-btn">
+            <i class="fas fa-bookmark"></i> 
+            <span>Bookmarks</span>
+          </a>
+          <a href="/activity" class="tab-btn active">
+            <i class="fas fa-chart-line"></i> 
+            <span>Activity</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content">
+        <!-- Page Header -->
+        <div class="content-header">
+          <h2>Activity Dashboard</h2>
+          <p>Track your journaling habits and see your progress over time.</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-book"></i></div>
+            <h4>Total Entries</h4>
+            <div class="stat-value"><%= chartData.totalEntries %></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-bookmark"></i></div>
+            <h4>Bookmarked</h4>
+            <div class="stat-value"><%= chartData.bookmarkedCount %></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+            <h4>Avg. Entries/Week</h4>
+            <div class="stat-value"><%= chartData.avgEntriesPerWeek %></div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="section-header">
+          <h3><i class="fas fa-chart-line"></i> Your Journaling Insights</h3>
+        </div>
+
+        <div class="charts-row">
+          <div class="card">
+            <div class="card-header">
+              <h4>Entries by Day of Week</h4>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="dayOfWeekChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h4>Monthly Activity</h4>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="card">
+            <div class="card-header">
+              <h4>Entry Length Trend</h4>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="entryLengthChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h4>Bookmarked vs Regular Entries</h4>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="bookmarkChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak Card -->
+        <div class="card">
+          <div class="card-header">
+            <h4>Journaling Streak</h4>
+          </div>
+          <div class="card-body">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                <h4>Current Streak</h4>
+                <div class="stat-value"><%= chartData.streakData.currentStreak %> days</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <h4>Longest Streak</h4>
+                <div class="stat-value"><%= chartData.streakData.longestStreak %> days</div>
+              </div>
             </div>
             
-            <nav class="sidebar-nav">
-                <a href="/profile" class="nav-link">
-                <i class="fas fa-book-open"></i> 
-                <span>Journal</span>
-                </a>
-                <a href="/bookmarks" class="nav-link">
-                <i class="fas fa-bookmark"></i> 
-                <span>Bookmarks</span>
-                </a>
-                <a href="/activity" class="nav-link active">
-                    <i class="fas fa-bookmark"></i> 
-                    <span>Activity</span>
-                </a>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <button id="themeToggle" class="theme-btn">
-                <i class="fas fa-sun"></i>
-                <i class="fas fa-moon"></i> 
-                <span>Toggle Theme</span>
-                </button>
-                <a href="/logout" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> 
-                <span>Sign Out</span>
-                </a>
+            <% if (chartData.streakData.longestStreak > 0) { %>
+            <div class="streak-progress">
+              <h4>Streak Progress</h4>
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill" 
+                  style="width: <%= (chartData.streakData.currentStreak / chartData.streakData.longestStreak) * 100 %>%">
+                </div>
+              </div>
+              <p>
+                <% if (chartData.streakData.currentStreak === 0) { %>
+                  Start writing today to begin a new streak!
+                <% } else if (chartData.streakData.currentStreak >= chartData.streakData.longestStreak) { %>
+                  You're on your best streak ever! Keep it up!
+                <% } else { %>
+                  <%= chartData.streakData.longestStreak - chartData.streakData.currentStreak %> more days to beat your record!
+                <% } %>
+              </p>
             </div>
-        </aside>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Mobile Header -->
-            <header class="mobile-header">
-                <div class="mobile-logo">
-                <h1>Eremos</h1>
-                </div>
-                <div class="header-actions">
-                <button id="mobileThemeToggle" class="icon-btn">
-                    <i class="fas fa-sun"></i>
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="mobileMenuBtn" class="icon-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
-                </div>
-            </header>
-
-            <!-- Mobile Navigation -->
-            <div class="mobile-nav">
-                <div class="mobile-tabs">
-                <a href="/profile" class="tab-btn active">
-                    <i class="fas fa-book-open"></i> 
-                    <span>Journal</span>
-                </a>
-                <a href="/bookmarks" class="tab-btn">
-                    <i class="fas fa-bookmark"></i> 
-                    <span>Bookmarks</span>
-                </a>
-                <a href="/activity" class="tab-btn">
-                    <i class="fas fa-bookmark"></i> 
-                    <span>Activity</span>
-                </a>
-                </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="content">
-                <!-- Page Header -->
-                <div class="content-header">
-                <h2>Activity</h2>
-                <p>Look back at your journey and see how far you've come.</p>
-                </div>
-
-                <!-- Search Form -->
-                <div class="search-container">
-                <form action="/profile" method="GET" class="search-form">
-                    <div class="input-group">
-                    <input
-                        type="search"
-                        name="q"                        
-                        class="form-control" 
-                        placeholder="Search your entries..."
-                        aria-label="Search entries"
-                        value="<%= locals.searchTerm || '' %>"
-                    >
-                    <button class="btn btn-search" type="submit">
-                        <i class="fas fa-search"></i>
-                        <span>Search</span>
-                    </button>
-                    </div>
-                </form>
-                </div>
-
-                <!-- Journal Entry Card -->
-                <div class="card journal-card">
-                <div class="card-header">
-                    <h3><i class="fas fa-feather-alt"></i> Each entry brings you closer...</h3>
-                    <p>Write whatever is on your mind...</p>
-                </div>
-                <div class="card-body">
-                    <form action="/messages" method="POST">
-                    <div class="form-group">
-                        <label for="entryText">Your Thoughts Today:</label>
-                        <textarea 
-                        id="entryText" 
-                        name="entryText" 
-                        class="form-control journal-textarea" 
-                        placeholder="Enter your thoughts here..." 
-                        required
-                        ></textarea>
-                    </div>
-                    <div class="card-actions">
-                        <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Submit Entry
-                        </button> 
-                    </div>
-                    </form>
-                </div>
-                </div>
-
-                <!-- Journal History Section -->
-                <div class="history-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-history"></i> Journal History</h3>
-                </div>
-
-                <div class="history-list">
-                    <% if (locals.messages && messages.length > 0) { %>
-                    <% messages.forEach(function(message) { %>
-                        <div class="card history-card" data-id="<%= message._id %>">
-                        <div class="card-header">
-                            <div class="card-title">
-                            <h4><i class="far fa-calendar-alt"></i> <%= message.displayDate %> at <%= message.displayTime %></h4>
-                            <div class="card-actions">
-                                <a href="/entries/<%= message._id %>" class="btn btn-text">
-                                <i class="fas fa-eye"></i> View Full Entry
-                                </a>
-                                <button class="btn btn-icon bookmark-btn" title="Toggle Bookmark">
-                                <% if (message.isBookmarked) { %>
-                                    <i class="fas fa-bookmark"></i>
-                                <% } else { %>
-                                    <i class="far fa-bookmark"></i>
-                                <% } %>
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="entry-snippet"><%= message.text %></p>
-                            <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
-                            <div class="reflection-badge">
-                                <i class="fas fa-comment-dots"></i> Reflection available
-                            </div>
-                            <% } else if (message.aiReflection) { %>
-                            <div class="reflection-badge warning">
-                                <i class="fas fa-exclamation-circle"></i> Reflection issue
-                            </div>
-                            <% } %>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-danger btn-sm delete-btn">
-                            <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                        </div>
-                    <% }); %>
-                    <% } else { %>
-                    <div class="empty-state">
-                        <i class="fas fa-book"></i>
-                        <p>No journal entries found yet. Write your first one above!</p>
-                    </div>
-                    <% } %>
-                </div>
-                </div>
-            </div>
-        </main>
-    
-    <!-- Include Chart.js for future use -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/main.js"></script>
+  <!-- Hidden element to store chart data for JavaScript -->
+  <script>
+    window.clientSideChartData = <%- JSON.stringify(chartData) %>;
+  </script>
+  
+  <!-- Main JavaScript -->
+  <script src="/main.js"></script>
+  <script src="/activity.js"></script>
 </body>
 </html>
