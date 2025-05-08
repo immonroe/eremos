@@ -209,7 +209,9 @@
     </main>
   </div>
 
-  <!-- Hidden element to store chart data for JavaScript -->
+   <!-- for whatever reason this line of code broke the entire page lol -->
+  <!-- <div id="chart-data" data-chart-info="<%- JSON.stringify(chartData) %>"></div> -->
+   <!-- Updated version using windows WEB API to render chart information -->
   <script>
     window.clientSideChartData = <%- JSON.stringify(chartData) %>;
   </script>

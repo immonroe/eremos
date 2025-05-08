@@ -1,7 +1,5 @@
-// public/activity.js (or public/js/activity.js)
-
 document.addEventListener('DOMContentLoaded', () => {
-    // const chartDataElement = document.getElementById('chart-data'); // NO LONGER NEEDED
+    // const chartDataElement = document.getElementById('chart-data'); // changed to using other method
 
     // Log the raw data from window object
     console.log("Raw data from window.clientSideChartData:", window.clientSideChartData);
@@ -10,11 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let serverChartData;
     try {
-        // Check if it's already an object (it should be with this method)
         if (typeof window.clientSideChartData === 'object' && window.clientSideChartData !== null) {
             serverChartData = window.clientSideChartData;
         } else if (typeof window.clientSideChartData === 'string') {
-            // Fallback if it somehow still ended up as a string (less likely with <%- ... %>)
             console.warn("window.clientSideChartData was a string, attempting to parse. This is unexpected.");
             serverChartData = JSON.parse(window.clientSideChartData);
         } else {
@@ -25,10 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (e) {
         console.error('Error processing chart data from window.clientSideChartData:', e);
-        // Display error message on the page (similar to your existing logic)
         const chartsSection = document.querySelector('.section-header + .charts-row') || document.querySelector('.content');
         if (chartsSection) {
-            // ... (your error display logic here) ...
             const errorDisplay = document.createElement('div');
             errorDisplay.innerHTML = '<p style="color: red; text-align: center; border: 1px solid red; padding: 10px; background-color: #ffeeee;">Could not load chart data. Please check the browser console (F12) for details.</p>';
             if (document.querySelector('.charts-row')) {
@@ -58,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: 'Entries by Day',
                         data: serverChartData.dayOfWeekData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)', // Blue
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     }]

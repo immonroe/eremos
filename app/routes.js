@@ -349,7 +349,7 @@ module.exports = function(app, passport, db) {
                 monthData.push(count);
             }
             
-            // Calculate entry length over time (last 10 entries)
+            // Calculate entry length over time (last 10 entries - don't want to pull too much data for demo day)
             const recentMessages = messages.slice(0, Math.min(10, messages.length)).reverse();
             const entryLengths = recentMessages.map(msg => msg.text ? msg.text.length : 0);
             const entryDates = recentMessages.map(msg => {
@@ -369,10 +369,9 @@ module.exports = function(app, passport, db) {
                 avgEntriesPerWeek = (totalEntries / diffWeeks).toFixed(1);
             }
             
-            // Calculate streak data (consecutive days with entries)
+            // Calculate streak data (consecutive days with entries - also mindful of multiple entries per day edge case)
             const streakData = calculateStreakData(messages);
             
-            // Create the chart data object
             const chartData = {
                 dayOfWeekData,
                 monthLabels,
@@ -390,7 +389,7 @@ module.exports = function(app, passport, db) {
             const hasData = totalEntries > 0;
             if (!hasData) {
                 console.log('No journal entries found for user. Using sample data for charts.');
-                // In case bug where things don't show
+                // In case bug where things don't show - demo day needs data lol
                 chartData.dayOfWeekData = [1, 2, 3, 2, 4, 3, 2];
                 chartData.monthData = [2, 3, 5, 4, 6, 3];
                 chartData.entryLengths = [100, 150, 200, 180, 250];
@@ -462,7 +461,7 @@ module.exports = function(app, passport, db) {
         
         const hasEntryToday = mostRecentDate.getTime() === today.getTime();
         if (!hasEntryToday) {
-            // Check if there was an entry yesterday to maintain streak
+            // Check if there was an entry yesterday to maintain streak - similar to longest consecutive sequence leetcode question!
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
             
