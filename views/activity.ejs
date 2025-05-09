@@ -224,14 +224,7 @@
     </main>
   </div>
 
-   <!-- for whatever reason this line of code broke the entire page lol -->
-  <!-- <div id="chart-data" data-chart-info="<%- JSON.stringify(chartData) %>"></div> -->
-   <!-- Updated version using windows WEB API to render chart information -->
-  <script>
-    window.clientSideChartData = <%- JSON.stringify(chartData) %>;
-  </script>
-  
-  <!-- Main JavaScript -->
+  <script>window.clientSideChartData = <%- JSON.stringify(chartData) %>;</script>
   <script src="/main.js"></script>
   <script src="/activity.js"></script>
 </body>
