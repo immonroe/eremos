@@ -33,6 +33,21 @@ document.addEventListener('DOMContentLoaded', function() {
     mobileThemeToggle.addEventListener('click', toggleTheme);
   }
 
+    // handles toggle for button when submitting a journal entry - indicates loading state on page
+    const entryForm = document.getElementById('entryForm');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (entryForm) {
+        entryForm.addEventListener('submit', function (e) {
+            // Hide the submit button text and show the spinner in its place
+            submitBtn.style.display = 'none';
+            loadingSpinner.style.display = 'inline-block';
+            submitBtn.disabled = true;
+        });
+    }
+
+
 
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const sidebar = document.querySelector('.sidebar');
