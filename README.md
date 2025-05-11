@@ -12,7 +12,7 @@ Eremos was built using the MEEN stack, combining server-side rendering with EJS 
 
 ## Optimizations
 
-To improve performance, unnecessary data loads were removed, and memory usage was streamlined. Templates were reused and partials implemented to reduce duplication. Routes and middleware were modularized to improve maintainability. As the project scales, more optimizations like lazy loading and caching are being considered.
+To improve performance, unnecessary data loads were removed, and memory usage was streamlined. As the project scales, more optimizations will be considered (modular components such as partials, refactoring routes, adding Controller folder for more efficient handling, etc.)
 
 ## Lessons Learned:
 
