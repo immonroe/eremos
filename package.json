@@ -21,6 +21,7 @@
     "ejs": "~2.5.2",
     "express": "^4.21.2",
     "express-session": "^1.15.6",
+    "fly": "^4.6.16",
     "lodash": "^4.17.20",
     "method-override": "~2.3.6",
     "mongo": "^0.1.0",
