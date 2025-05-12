@@ -24,9 +24,9 @@ var db
 
 // configuration ===============================================================
 mongoose.connect(configDB.url, (err, database) => {
-  if (err) return console.log(err)
-  db = database
-  require('./app/routes.js')(app, passport, db);
+    if (err) return console.log(err)
+    db = database
+    require('./app/routes.js')(app, passport, db);
 }); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
@@ -53,5 +53,6 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 // launch ======================================================================
-app.listen(port);
-console.log('The magic happens on port ' + port);
+app.listen(port, '0.0.0.0', () => {
+    console.log('The magic happens on port ' + port);
+});
