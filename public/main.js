@@ -112,6 +112,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  function formatDatesToLocalTimezone() {
+    const dateTimeElements = document.querySelectorAll('[data-utc-date]');
+    
+    dateTimeElements.forEach(element => {
+      const utcDateStr = element.getAttribute('data-utc-date');
+      if (!utcDateStr) return;
+      
+      try {
+        const date = new Date(utcDateStr);
+        if (isNaN(date.getTime())) return;
+        
+        const localDate = date.toLocaleDateString();
+        const localTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        element.textContent = `${localDate} at ${localTime}`;
+      } catch (e) {
+        console.error('Error formatting date:', e);
+      }
+    });
+  }
+
   const historyListContainer = document.querySelector('.history-list');
 
   if (historyListContainer) {
