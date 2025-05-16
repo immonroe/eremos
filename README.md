@@ -28,4 +28,4 @@ Through building Eremos, I gained hands-on experience working with AI integratio
 ## Usage
 
 1. run `node server.js`
-2. Navigate to `localhost:8080`
+2. Navigate to `localhost:3000`
