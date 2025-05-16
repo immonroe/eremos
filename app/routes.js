@@ -123,6 +123,7 @@ module.exports = function(app, passport, db) {
             aiReflectionText = await getAIReflection(currentEntryText, formattedHistory);
             console.log("AI reflection received.");
 
+            // defining messages table in db
             const newEntryDoc = {
                 text: currentEntryText,   
                 aiReflection: aiReflectionText, 
