@@ -4,7 +4,7 @@ Eremos is a mindfulness journaling app designed to help users reflect, grow, and
 
 ![eremos](https://github.com/user-attachments/assets/8ff970f9-ed49-4304-b8af-2e4dec6929af)
 
-[Live Demo](https://eremos.onrender.com)
+[Live Demo](https://web-production-fe53b.up.railway.app/)
 
 ## How It's Made:
 
