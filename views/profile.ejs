@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <script>
-    (function() {
+    (function () {
       try {
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
+
         if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
           document.documentElement.classList.add('dark');
         } else {
@@ -23,6 +24,7 @@
     })();
   </script>
 </head>
+
 <body>
   <div class="app-container">
     <!-- Sidebar -->
@@ -33,35 +35,36 @@
           <p class="tagline">Find your oasis</p>
         </div>
       </div>
-      
+
       <nav class="sidebar-nav">
+        <!-- Reverted to static active class for Journal -->
         <a href="/profile" class="nav-link active">
-          <i class="fas fa-book-open"></i> 
+          <i class="fas fa-book-open"></i>
           <span>Journal</span>
         </a>
         <a href="/bookmarks" class="nav-link">
-          <i class="fas fa-bookmark"></i> 
+          <i class="fas fa-bookmark"></i>
           <span>Bookmarks</span>
         </a>
         <a href="/activity" class="nav-link">
-            <i class="fas fa-chart-line"></i> 
-            <span>Activity</span>
-          </a>
+          <i class="fas fa-chart-line"></i>
+          <span>Activity</span>
+        </a>
       </nav>
-      
+
       <div class="sidebar-footer">
         <button id="themeToggle" class="theme-btn">
           <i class="fas fa-sun"></i>
-          <i class="fas fa-moon"></i> 
+          <i class="fas fa-moon"></i>
           <span>Toggle Theme</span>
         </button>
         <a href="/logout" class="logout-btn">
-          <i class="fas fa-sign-out-alt"></i> 
+          <i class="fas fa-sign-out-alt"></i>
           <span>Sign Out</span>
         </a>
       </div>
     </aside>
-  
+
     <!-- Main Content -->
     <main class="main-content">
       <!-- Mobile Header -->
@@ -79,37 +82,31 @@
           </button>
         </div>
       </header>
-  
+
       <!-- Content Area -->
       <div class="content">
         <!-- Page Header -->
         <div class="content-header">
           <h2>Journal</h2>
-          <% if (locals.success && success.length > 0) { %>
+          <% if (locals.success && success.length> 0) { %>
             <div class="alert alert-success fade-in" role="alert">
               <%= success %>
             </div>
-          <% } %>
-          <% if (locals.error && error.length > 0) { %>
-            <div class="alert alert-danger fade-in" role="alert">
-              <%= error %>
-            </div>
-          <% } %>
-          <p>Write your thoughts and reflections in your personal sanctuary.</p>
+            <% } %>
+              <% if (locals.error && error.length> 0) { %>
+                <div class="alert alert-danger fade-in" role="alert">
+                  <%= error %>
+                </div>
+                <% } %>
+                  <p>Write your thoughts and reflections in your personal sanctuary.</p>
         </div>
-  
+
         <!-- Search Form -->
         <div class="search-container">
           <form action="/profile" method="GET" class="search-form">
             <div class="input-group">
-              <input
-                type="search"
-                name="q"                        
-                class="form-control" 
-                placeholder="Search your entries..."
-                aria-label="Search entries"
-                value="<%= locals.searchTerm || '' %>"
-              >
+              <input type="search" name="q" class="form-control" placeholder="Search your entries..."
+                aria-label="Search entries" value="<%= locals.searchTerm || '' %>">
               <button class="btn btn-search" type="submit">
                 <i class="fas fa-search"></i>
                 <span>Search</span>
@@ -117,7 +114,7 @@
             </div>
           </form>
         </div>
-  
+
         <!-- Journal Entry Card -->
         <div class="card journal-card">
           <div class="card-header">
@@ -128,13 +125,8 @@
             <form id="entryForm" action="/messages" method="POST">
               <div class="form-group">
                 <label for="entryText">Your Thoughts Today:</label>
-                <textarea 
-                  id="entryText" 
-                  name="entryText" 
-                  class="form-control journal-textarea" 
-                  placeholder="Enter your thoughts here..." 
-                  required
-                ></textarea>
+                <textarea id="entryText" name="entryText" class="form-control journal-textarea"
+                  placeholder="Enter your thoughts here..." required></textarea>
               </div>
               <div class="card-actions">
                 <button id="submitBtn" type="submit" class="btn btn-primary">
@@ -147,20 +139,22 @@
             </form>
           </div>
         </div>
-  
+
         <!-- Journal History Section -->
         <div class="history-section">
           <div class="section-header">
             <h3><i class="fas fa-history"></i> Journal History</h3>
           </div>
-  
+
           <div class="history-list">
-            <% if (locals.messages && messages.length > 0) { %>
+            <% if (locals.messages && messages.length> 0) { %>
               <% messages.forEach(function(message) { %>
                 <div class="card history-card" data-id="<%= message._id %>">
                   <div class="card-header">
                     <div class="card-title">
-                      <h4><i class="far fa-calendar-alt"></i> <%= message.displayDate %> at <%= message.displayTime %></h4>
+                      <h4><i class="far fa-calendar-alt"></i>
+                        <%= message.displayDate %> at <%= message.displayTime %>
+                      </h4>
                       <div class="card-actions">
                         <a href="/entries/<%= message._id %>" class="btn btn-text">
                           <i class="fas fa-eye"></i> View Full Entry
@@ -168,24 +162,27 @@
                         <button class="btn btn-icon bookmark-btn" title="Toggle Bookmark">
                           <% if (message.isBookmarked) { %>
                             <i class="fas fa-bookmark"></i>
-                          <% } else { %>
-                            <i class="far fa-bookmark"></i>
-                          <% } %>
+                            <% } else { %>
+                              <i class="far fa-bookmark"></i>
+                              <% } %>
                         </button>
                       </div>
                     </div>
                   </div>
                   <div class="card-body">
-                    <p class="entry-snippet"><%= message.text %></p>
-                    <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
+                    <p class="entry-snippet">
+                      <%= message.text %>
+                    </p>
+                    <% if (message.aiReflection && !message.aiReflection.includes('failed') &&
+                      !message.aiReflection.includes('pending')) { %>
                       <div class="reflection-badge">
                         <i class="fas fa-comment-dots"></i> Reflection available
                       </div>
-                    <% } else if (message.aiReflection) { %>
-                      <div class="reflection-badge warning">
-                        <i class="fas fa-exclamation-circle"></i> Reflection issue
-                      </div>
-                    <% } %>
+                      <% } else if (message.aiReflection) { %>
+                        <div class="reflection-badge warning">
+                          <i class="fas fa-exclamation-circle"></i> Reflection issue
+                        </div>
+                        <% } %>
                   </div>
                   <div class="card-footer">
                     <button class="btn btn-danger btn-sm delete-btn">
@@ -193,13 +190,13 @@
                     </button>
                   </div>
                 </div>
-              <% }); %>
-            <% } else { %>
-              <div class="empty-state">
-                <i class="fas fa-book"></i>
-                <p>No journal entries found yet. Write your first one above!</p>
-              </div>
-            <% } %>
+                <% }); %>
+                  <% } else { %>
+                    <div class="empty-state">
+                      <i class="fas fa-book"></i>
+                      <p>No journal entries found yet. Write your first one above!</p>
+                    </div>
+                    <% } %>
           </div>
         </div>
       </div>
@@ -225,4 +222,5 @@
   </div>
   <script src="/main.js"></script>
 </body>
+
 </html>

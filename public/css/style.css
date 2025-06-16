@@ -1,74 +1,123 @@
 :root {
   /* Light Theme - Warm, Welcoming Colors */
-  --background: #faf7f2; /* Soft beige background */
-  --foreground: #3a3a3a; /* Soft dark text for readability */
+  --background: #faf7f2;
+  /* Soft beige background */
+  --foreground: #3a3a3a;
+  /* Soft dark text for readability */
   --card: #ffffff;
   --card-foreground: #3a3a3a;
-  
-  --border: #e8e0d5; /* Warm beige border */
-  --input: #f5f1ea; /* Light beige for input fields */
-  
-  --primary: #c9a67d; /* Warm sand tone */
-  --primary-hover: #b89468; /* Darker sand for hover states */
+
+  --border: #e8e0d5;
+  /* Warm beige border */
+  --input: #f5f1ea;
+  /* Light beige for input fields */
+
+  --primary: #c9a67d;
+  /* Warm sand tone */
+  --primary-hover: #b89468;
+  /* Darker sand for hover states */
   --primary-foreground: #ffffff;
-  
-  --secondary: #f7f1e1; /* Light peach tint */
+
+  --secondary: #f7f1e1;
+  /* Light peach tint */
   --secondary-foreground: #3a3a3a;
-  
-  --accent: #e3d3ad; /* Peachy beige accent */
+
+  --accent: #e3d3ad;
+  /* Peachy beige accent */
   --accent-foreground: #3a3a3a;
-  
-  --destructive: #d9534f; /* Softer red */
-  --destructive-hover: #c9302c; /* Darker red for hover */
+
+  --destructive: #d9534f;
+  /* Softer red */
+  --destructive-hover: #c9302c;
+  /* Darker red for hover */
   --destructive-foreground: #ffffff;
-  
-  --success: #5cb85c; /* Soft green */
+
+  --success: #5cb85c;
+  /* Soft green */
   --success-foreground: #ffffff;
-  
-  --warning: #f0ad4e; /* Soft amber */
+
+  --warning: #f0ad4e;
+  /* Soft amber */
   --warning-foreground: #ffffff;
-  
-  --muted: #f4f1ea; /* Muted background */
-  --muted-foreground: #8a8a8a; /* Muted text */
-  
+
+  --muted: #f4f1ea;
+  /* Muted background */
+  --muted-foreground: #8a8a8a;
+  /* Muted text */
+
   --radius: 0.5rem;
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* NEW: Font Sizes (using rem for scalability) */
+  --font-size-base: 1rem;
+  /* 16px - Base for rem calculations */
+  --font-size-sm: 0.875rem;
+  /* 14px */
+  --font-size-md: 1rem;
+  /* 16px */
+  --font-size-lg: 1.125rem;
+  /* 18px */
+  --font-size-xl: 1.25rem;
+  /* 20px */
+  --font-size-2xl: 1.5rem;
+  /* 24px */
+  --font-size-3xl: 1.875rem;
+  /* 30px */
+  --font-size-4xl: 2.25rem;
+  /* 36px */
+  --font-size-5xl: 3rem;
+  /* 48px */
 }
 
 .dark {
   /* Dark Theme - Rich Dark Colors with Hints of Light */
-  --background: #121212; /* Rich dark background */
-  --foreground: #f0ebe2; /* Warm off-white text */
-  --card: #1e1e1e; /* Slightly lighter than background */
+  --background: #121212;
+  /* Rich dark background */
+  --foreground: #f0ebe2;
+  /* Warm off-white text */
+  --card: #1e1e1e;
+  /* Slightly lighter than background */
   --card-foreground: #f0ebe2;
-  
-  --border: #2c2c2c; /* Dark border with hint of warmth */
-  --input: #2c2c2c; /* Dark input fields */
-  
-  --primary: #d4b483; /* Warm gold */
-  --primary-hover: #c0a06e; /* Darker gold for hover */
+
+  --border: #2c2c2c;
+  /* Dark border with hint of warmth */
+  --input: #2c2c2c;
+  /* Dark input fields */
+
+  --primary: #d4b483;
+  /* Warm gold */
+  --primary-hover: #c0a06e;
+  /* Darker gold for hover */
   --primary-foreground: #121212;
-  
-  --secondary: #2a2520; /* Dark brown with hint of warmth */
+
+  --secondary: #2a2520;
+  /* Dark brown with hint of warmth */
   --secondary-foreground: #f0ebe2;
-  
-  --accent: #a18a68; /* Muted gold accent */
+
+  --accent: #a18a68;
+  /* Muted gold accent */
   --accent-foreground: #121212;
-  
-  --destructive: #a02c2c; /* Deep red */
-  --destructive-hover: #8a2424; /* Darker red for hover */
+
+  --destructive: #a02c2c;
+  /* Deep red */
+  --destructive-hover: #8a2424;
+  /* Darker red for hover */
   --destructive-foreground: #f0ebe2;
-  
-  --success: #3e7b3e; /* Deep green */
+
+  --success: #3e7b3e;
+  /* Deep green */
   --success-foreground: #f0ebe2;
-  
-  --warning: #a67c3d; /* Deep amber */
+
+  --warning: #a67c3d;
+  /* Deep amber */
   --warning-foreground: #f0ebe2;
-  
-  --muted: #252525; /* Muted dark background */
-  --muted-foreground: #a0a0a0; /* Muted text */
-  
+
+  --muted: #252525;
+  /* Muted dark background */
+  --muted-foreground: #a0a0a0;
+  /* Muted text */
+
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -86,6 +135,8 @@ body {
   line-height: 1.6;
   transition: background-color 0.3s, color 0.3s;
   min-height: 100vh;
+  font-size: var(--font-size-md);
+  /* Standardized base font size */
 }
 
 a {
@@ -100,18 +151,28 @@ a:hover {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   line-height: 1.3;
   margin-bottom: 0.5rem;
+  color: var(--foreground);
+  /* Ensured headings use foreground color */
 }
 
 p {
   margin-bottom: 1rem;
+  font-size: var(--font-size-md);
+  /* Explicitly setting for clarity */
 }
 
 .tagline {
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  /* Slightly smaller, but readable */
   color: var(--muted-foreground);
   margin-top: -0.5rem;
   font-style: italic;
@@ -124,8 +185,10 @@ p {
   justify-content: center;
   border-radius: var(--radius);
   font-weight: 500;
-  font-size: 0.95rem;
-  padding: 0.6rem 1.2rem;
+  font-size: var(--font-size-md);
+  /* Standard button text size */
+  padding: 0.75rem 1.4rem;
+  /* Adjusted padding for better fit with new font size */
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
@@ -161,8 +224,10 @@ p {
 }
 
 .btn-sm {
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
+  font-size: var(--font-size-sm);
+  /* Smaller button text */
+  padding: 0.5rem 1rem;
+  /* Adjusted padding */
 }
 
 .btn-text {
@@ -170,7 +235,8 @@ p {
   border: none;
   color: var(--primary);
   padding: 0.3rem 0.5rem;
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  /* Standard text button size */
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -189,7 +255,8 @@ p {
   color: var(--muted-foreground);
   cursor: pointer;
   padding: 0.3rem;
-  font-size: 1rem;
+  font-size: var(--font-size-lg);
+  /* Slightly larger icon size */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -220,6 +287,8 @@ p {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  font-size: var(--font-size-md);
+  /* Standard label size */
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -232,7 +301,8 @@ p {
   border-radius: var(--radius);
   background-color: var(--input);
   color: var(--foreground);
-  font-size: 1rem;
+  font-size: var(--font-size-md);
+  /* Standard input field size */
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -259,6 +329,8 @@ p {
   border-radius: var(--radius);
   margin-bottom: 1rem;
   border: 1px solid transparent;
+  font-size: var(--font-size-md);
+  /* Ensure alert text is readable */
 }
 
 .alert-success {
@@ -282,19 +354,23 @@ p {
     margin-top: 0;
     margin-bottom: 0;
   }
+
   10% {
     opacity: 1;
     transform: translateY(0);
-    max-height: 200px; /* match your alert's actual height */
+    max-height: 200px;
+    /* match your alert's actual height */
     padding-top: 1rem;
     padding-bottom: 1rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
   85% {
     opacity: 1;
     transform: translateY(0);
   }
+
   95% {
     opacity: 0;
     transform: translateY(-10px);
@@ -304,6 +380,7 @@ p {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
   100% {
     opacity: 0;
     transform: translateY(-10px);
@@ -323,18 +400,18 @@ p {
 }
 
 .sidebar {
-  width: 16rem;
+  width: 20rem;
   background-color: var(--card);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease, width 0.3s ease;
   z-index: 100;
-  position: fixed; /* This is the key property to keep sidebar fixed */
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  overflow-y: auto; /* Allows scrolling within sidebar if content is too tall */
+  overflow-y: auto;
 }
 
 .sidebar-header {
@@ -353,7 +430,8 @@ p {
 }
 
 .sidebar-logo h1 {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
+  /* Changed to 24px */
   font-weight: bold;
   color: var(--primary);
   margin-bottom: 0.2rem;
@@ -372,7 +450,8 @@ p {
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
   color: var(--foreground);
-  font-size: 0.95rem;
+  font-size: var(--font-size-md);
+  /* Changed to 16px */
   font-weight: 500;
   margin-bottom: 0.5rem;
   transition: all 0.2s;
@@ -380,7 +459,8 @@ p {
 
 .nav-link i {
   margin-right: 0.75rem;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
+  /* Consistent with link text */
   width: 1.25rem;
   text-align: center;
 }
@@ -401,12 +481,14 @@ p {
   border-top: 1px solid var(--border);
 }
 
-.theme-btn, .logout-btn {
+.theme-btn,
+.logout-btn {
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
-  font-size: 0.95rem;
+  font-size: var(--font-size-md);
+  /* Changed to 16px */
   font-weight: 500;
   background: none;
   border: none;
@@ -417,13 +499,16 @@ p {
   transition: background-color 0.2s;
 }
 
-.theme-btn:hover, .logout-btn:hover {
+.theme-btn:hover,
+.logout-btn:hover {
   background-color: var(--muted);
 }
 
-.theme-btn i, .logout-btn i {
+.theme-btn i,
+.logout-btn i {
   margin-right: 0.75rem;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
+  /* Consistent with button text */
   width: 1.25rem;
   text-align: center;
 }
@@ -459,6 +544,7 @@ p {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  margin-left: 21rem;
 }
 
 .mobile-header {
@@ -471,7 +557,8 @@ p {
 }
 
 .mobile-logo h1 {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
+  /* Changed to 20px */
   font-weight: bold;
   color: var(--primary);
   margin: 0;
@@ -543,7 +630,8 @@ p {
 }
 
 .mobile-tabs .tab-btn i {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
+  /* Changed to 20px */
 }
 
 .content {
@@ -559,15 +647,16 @@ p {
 }
 
 .content-header h2 {
-  font-size: 1.875rem;
+  font-size: var(--font-size-3xl);
+  /* Changed to 30px */
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--foreground);
 }
 
 .content-header p {
   color: var(--muted-foreground);
-  font-size: 1rem;
+  font-size: var(--font-size-md);
+  /* Changed to 16px */
 }
 
 .search-container {
@@ -599,7 +688,8 @@ p {
 }
 
 .card-header h3 {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
+  /* Changed to 20px */
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -609,7 +699,8 @@ p {
 
 .card-header p {
   color: var(--muted-foreground);
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
   margin-bottom: 0;
 }
 
@@ -633,7 +724,8 @@ p {
 }
 
 .card-title h4 {
-  font-size: 1rem;
+  font-size: var(--font-size-md);
+  /* Changed to 16px */
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -665,7 +757,8 @@ p {
 }
 
 .section-header h3 {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
+  /* Changed to 20px */
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -691,6 +784,8 @@ p {
   margin-bottom: 1rem;
   line-height: 1.6;
   color: var(--foreground);
+  font-size: var(--font-size-md);
+  /* Ensured readability for snippet */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -704,7 +799,8 @@ p {
   border-radius: 2rem;
   background-color: rgba(201, 166, 125, 0.1);
   color: var(--primary);
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
   gap: 0.4rem;
 }
 
@@ -723,7 +819,8 @@ p {
 }
 
 .empty-state i {
-  font-size: 2.5rem;
+  font-size: var(--font-size-5xl);
+  /* Changed to 48px for prominence */
   margin-bottom: 1rem;
   color: var(--primary);
   opacity: 0.5;
@@ -731,42 +828,67 @@ p {
 
 .empty-state p {
   margin-bottom: 0;
+  font-size: var(--font-size-md);
+  /* Changed to 16px */
 }
 
 /* Responsive Styles */
-@media (max-width: 992px) {
-  .content {
-    padding: 1.5rem;
+
+/* Added a media query for larger desktops to increase base font size */
+@media (min-width: 1200px) {
+  body {
+    font-size: 1.0625rem;
+    /* ~17px for a slightly larger feel on large screens */
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .sidebar {
     position: fixed;
     left: -100%;
+    /* Hide sidebar off-screen by default on small screens */
     top: 0;
     bottom: 0;
     box-shadow: var(--shadow);
   }
-  
+
   .sidebar.show {
     left: 0;
+    /* Slide sidebar into view on toggle */
   }
 
-  .mobile-header,
-  .mobile-nav {
+  .main-content {
+    margin-left: 0;
+    /* Remove margin on small screens */
+    width: 100%;
+    /* Take full width */
+  }
+
+  .mobile-header {
     display: flex;
+    /* Show mobile header with toggle button */
   }
 
   .content {
     padding: 1.25rem;
   }
-  
+
+  /* Adjust headings for mobile for better fit */
+  .content-header h2 {
+    font-size: var(--font-size-2xl);
+    /* Reduced to 24px on mobile */
+  }
+
+  .card-header h3 {
+    font-size: var(--font-size-lg);
+    /* Reduced to 18px on mobile */
+  }
+
   .card-title {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .card-actions {
     width: 100%;
     justify-content: flex-start;
@@ -808,18 +930,21 @@ p {
 .stat-card h4 {
   margin-top: 0;
   color: var(--muted-foreground);
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
 }
 
 .stat-card .stat-value {
-  font-size: 2rem;
+  font-size: var(--font-size-4xl);
+  /* Changed to 36px */
   font-weight: bold;
   margin: 0.5rem 0;
   color: var(--foreground);
 }
 
 .stat-card .stat-icon {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
+  /* Changed to 24px */
   margin-bottom: 0.5rem;
   color: var(--primary);
 }
@@ -843,10 +968,10 @@ p {
 }
 
 .streak-progress h4 {
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: var(--foreground);
 }
 
 .streak-progress .progress-bar {
@@ -866,7 +991,8 @@ p {
 
 .streak-progress p {
   margin-top: 0.5rem;
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
   color: var(--muted-foreground);
 }
 
@@ -881,7 +1007,8 @@ p {
 .filter-btn {
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius);
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
   background-color: var(--muted);
   color: var(--foreground);
   border: 1px solid var(--border);
@@ -912,7 +1039,8 @@ p {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
 }
 
 .legend-color {
@@ -930,7 +1058,8 @@ p {
   color: var(--foreground) !important;
   box-shadow: var(--shadow) !important;
   font-family: var(--font-sans) !important;
-  font-size: 0.9rem !important;
+  font-size: var(--font-size-sm) !important;
+  /* Changed to 14px */
 }
 
 @media (max-width: 576px) {
@@ -985,7 +1114,8 @@ p {
 .modal-header h3 {
   margin: 0;
   color: var(--text-color, #333);
-  font-size: 1.2rem;
+  font-size: var(--font-size-xl);
+  /* Changed to 20px */
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -998,7 +1128,8 @@ p {
 .close-btn {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
+  /* Adjusted for better click target */
   cursor: pointer;
   color: var(--text-secondary, #666);
 }
@@ -1010,6 +1141,8 @@ p {
 .modal-body p {
   margin: 0 0 1rem;
   color: var(--text-color, #333);
+  font-size: var(--font-size-md);
+  /* Changed to 16px */
 }
 
 .warning-text {
@@ -1017,7 +1150,8 @@ p {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
+  /* Changed to 14px */
 }
 
 .modal-footer {
@@ -1034,7 +1168,7 @@ html.dark .modal-content {
   border: 1px solid var(--border-color, #444);
 }
 
-html.dark .modal-header, 
+html.dark .modal-header,
 html.dark .modal-footer {
   border-color: var(--border-color, #444);
 }

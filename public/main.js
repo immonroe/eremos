@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('DOM fully loaded and parsed');
 
   const themeToggle = document.getElementById('themeToggle');
@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   function applyTheme(theme) {
-     if (theme === 'dark') {
-         document.documentElement.classList.add('dark');
-         if (themeText) themeText.textContent = 'Light Mode';
-     } else {
-         document.documentElement.classList.remove('dark');
-         if (themeText) themeText.textContent = 'Dark Mode';
-     }
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      if (themeText) themeText.textContent = 'Light Mode';
+    } else {
+      document.documentElement.classList.remove('dark');
+      if (themeText) themeText.textContent = 'Dark Mode';
+    }
   }
   applyTheme(savedTheme === 'dark' || (!savedTheme && prefersDark) ? 'dark' : 'light');
 
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const sidebar = document.querySelector('.sidebar');
 
   if (mobileMenuBtn && sidebar) {
-    mobileMenuBtn.addEventListener('click', function() {
+    mobileMenuBtn.addEventListener('click', function () {
       sidebar.classList.toggle('show');
     });
   }
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const closeModal = document.getElementById('closeModal');
   const cancelDelete = document.getElementById('cancelDelete');
   const confirmDelete = document.getElementById('confirmDelete');
-  
+
   let currentEntryToDelete = null;
   let currentEntryCard = null;
 
@@ -66,32 +66,32 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteModal.classList.add('show');
     document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
   }
-  
+
   function closeModalFunc() {
     deleteModal.classList.remove('show');
     document.body.style.overflow = ''; // Re-enable scrolling
     currentEntryToDelete = null;
     currentEntryCard = null;
   }
-  
+
   if (closeModal) closeModal.addEventListener('click', closeModalFunc);
   if (cancelDelete) cancelDelete.addEventListener('click', closeModalFunc);
-  
+
   if (confirmDelete) {
-    confirmDelete.addEventListener('click', async function() {
+    confirmDelete.addEventListener('click', async function () {
       if (!currentEntryToDelete) {
         closeModalFunc();
         return;
       }
-      
+
       try {
-        const response = await fetch(`/messages/${currentEntryToDelete}`, { 
-          method: 'DELETE' 
+        const response = await fetch(`/messages/${currentEntryToDelete}`, {
+          method: 'DELETE'
         });
         const data = await response.json();
 
-        if (!response.ok) { 
-          throw new Error(data.message || `Server error: ${response.status}`); 
+        if (!response.ok) {
+          throw new Error(data.message || `Server error: ${response.status}`);
         }
 
         if (data.message && data.message.toLowerCase().includes('success')) {
@@ -114,18 +114,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function formatDatesToLocalTimezone() {
     const dateTimeElements = document.querySelectorAll('[data-utc-date]');
-    
+
     dateTimeElements.forEach(element => {
       const utcDateStr = element.getAttribute('data-utc-date');
       if (!utcDateStr) return;
-      
+
       try {
         const date = new Date(utcDateStr);
         if (isNaN(date.getTime())) return;
-        
+
         const localDate = date.toLocaleDateString();
         const localTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
+
         element.textContent = `${localDate} at ${localTime}`;
       } catch (e) {
         console.error('Error formatting date:', e);
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const historyListContainer = document.querySelector('.history-list');
 
   if (historyListContainer) {
-    historyListContainer.addEventListener('click', async function(event) {
+    historyListContainer.addEventListener('click', async function (event) {
       console.log("Click detected inside history list. Target:", event.target);
 
       const bookmarkButton = event.target.closest('.bookmark-btn');
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const deleteButton = event.target.closest('.delete-btn');
       if (deleteButton) {
         console.log('Delete button clicked via delegation');
-        event.preventDefault(); 
+        event.preventDefault();
 
         const entryCard = deleteButton.closest('.history-card');
         const entryId = entryCard ? entryCard.dataset.id : null;
