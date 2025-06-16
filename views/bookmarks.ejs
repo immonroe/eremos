@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <script>
-    (function() {
+    (function () {
       try {
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
+
         if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
           document.documentElement.classList.add('dark');
         } else {
@@ -23,42 +24,43 @@
     })();
   </script>
 </head>
+
 <body>
   <div class="app-container">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-          <div class="sidebar-logo">
+        <div class="sidebar-logo">
           <h1>Eremos</h1>
           <p class="tagline">Find your oasis</p>
-          </div>
+        </div>
       </div>
-      
+
       <nav class="sidebar-nav">
-          <a href="/profile" class="nav-link">
-          <i class="fas fa-book-open"></i> 
+        <a href="/profile" class="nav-link">
+          <i class="fas fa-book-open"></i>
           <span>Journal</span>
-          </a>
-          <a href="/bookmarks" class="nav-link active">
-          <i class="fas fa-bookmark"></i> 
+        </a>
+        <a href="/bookmarks" class="nav-link active">
+          <i class="fas fa-bookmark"></i>
           <span>Bookmarks</span>
-          </a>
-          <a href="/activity" class="nav-link">
-              <i class="fas fa-chart-line"></i> 
-              <span>Activity</span>
-          </a>
+        </a>
+        <a href="/activity" class="nav-link">
+          <i class="fas fa-chart-line"></i>
+          <span>Activity</span>
+        </a>
       </nav>
-      
+
       <div class="sidebar-footer">
-          <button id="themeToggle" class="theme-btn">
+        <button id="themeToggle" class="theme-btn">
           <i class="fas fa-sun"></i>
-          <i class="fas fa-moon"></i> 
+          <i class="fas fa-moon"></i>
           <span>Toggle Theme</span>
-          </button>
-          <a href="/logout" class="logout-btn">
-          <i class="fas fa-sign-out-alt"></i> 
+        </button>
+        <a href="/logout" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
           <span>Sign Out</span>
-          </a>
+        </a>
       </div>
     </aside>
 
@@ -66,7 +68,7 @@
       <header class="mobile-header">
         <h1>Eremos</h1>
         <div class="header-actions">
-          <button id="mobileThemeToggle" class="icon-btn"><i class="fas fa-sun"></i><i class="fas fa-moon" style="display: none;"></i></button>
+          <button id="mobileThemeToggle" class="icon-btn"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></button>
           <button id="mobileMenuBtn" class="icon-btn"><i class="fas fa-bars"></i></button>
         </div>
       </header>
@@ -74,26 +76,24 @@
       <div class="content">
         <div class="content-header">
           <h2>Bookmarks</h2>
-           <% if (locals.success && success.length > 0) { %>
-             <div class="alert alert-success" role="alert"><%= success %></div>
-           <% } %>
-           <% if (locals.error && error.length > 0) { %>
-             <div class="alert alert-danger" role="alert"><%= error %></div>
-           <% } %>
-          <p>Revisit your saved reflections.</p>
+          <% if (locals.success && success.length> 0) { %>
+            <div class="alert alert-success" role="alert">
+              <%= success %>
+            </div>
+            <% } %>
+              <% if (locals.error && error.length> 0) { %>
+                <div class="alert alert-danger" role="alert">
+                  <%= error %>
+                </div>
+                <% } %>
+                  <p>Revisit your saved reflections.</p>
         </div>
 
         <div class="search-container">
           <form action="/bookmarks" method="GET" class="search-form">
             <div class="input-group">
-              <input
-                type="search"
-                name="q"                        
-                class="form-control" 
-                placeholder="Search your bookmarks..."
-                aria-label="Search bookmarks"
-                value="<%= locals.searchTerm || '' %>"
-              >
+              <input type="search" name="q" class="form-control" placeholder="Search your bookmarks..."
+                aria-label="Search bookmarks" value="<%= locals.searchTerm || '' %>">
               <button class="btn btn-search" type="submit">
                 <i class="fas fa-search"></i>
                 <span>Search</span>
@@ -104,12 +104,14 @@
 
         <div class="history-section">
           <div class="history-list">
-            <% if (locals.messages && messages.length > 0) { %>
+            <% if (locals.messages && messages.length> 0) { %>
               <% messages.forEach(function(message) { %>
                 <div class="card history-card" data-id="<%= message._id %>">
                   <div class="card-header">
                     <div class="card-title">
-                      <h4><i class="far fa-calendar-alt"></i> <%= message.displayDate %> at <%= message.displayTime %></h4>
+                      <h4><i class="far fa-calendar-alt"></i>
+                        <%= message.displayDate %> at <%= message.displayTime %>
+                      </h4>
                       <div class="card-actions">
                         <a href="/entries/<%= message._id %>" class="btn btn-text">
                           <i class="fas fa-eye"></i> View Full Entry
@@ -121,16 +123,19 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <p class="entry-snippet"><%= message.text %></p>
-                    <% if (message.aiReflection && !message.aiReflection.includes('failed') && !message.aiReflection.includes('pending')) { %>
+                    <p class="entry-snippet">
+                      <%= message.text %>
+                    </p>
+                    <% if (message.aiReflection && !message.aiReflection.includes('failed') &&
+                      !message.aiReflection.includes('pending')) { %>
                       <div class="reflection-badge">
                         <i class="fas fa-comment-dots"></i> Reflection available
                       </div>
-                    <% } else if (message.aiReflection) { %>
-                      <div class="reflection-badge warning">
-                        <i class="fas fa-exclamation-circle"></i> Reflection issue
-                      </div>
-                    <% } %>
+                      <% } else if (message.aiReflection) { %>
+                        <div class="reflection-badge warning">
+                          <i class="fas fa-exclamation-circle"></i> Reflection issue
+                        </div>
+                        <% } %>
                   </div>
                   <div class="card-footer">
                     <button class="btn btn-danger btn-sm delete-btn">
@@ -138,13 +143,14 @@
                     </button>
                   </div>
                 </div>
-              <% }); %>
-            <% } else { %>
-              <div class="empty-state">
-                <i class="far fa-bookmark"></i>
-                <p>You haven't bookmarked any entries yet. Click the bookmark icon on an entry in your main journal list to save it here.</p>
-              </div>
-            <% } %>
+                <% }); %>
+                  <% } else { %>
+                    <div class="empty-state">
+                      <i class="far fa-bookmark"></i>
+                      <p>You haven't bookmarked any entries yet. Click the bookmark icon on an entry in your main
+                        journal list to save it here.</p>
+                    </div>
+                    <% } %>
           </div>
         </div>
       </div>
@@ -171,4 +177,5 @@
 
   <script src="/main.js"></script>
 </body>
+
 </html>
