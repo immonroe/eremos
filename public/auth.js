@@ -68,4 +68,18 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+    // Fill in test credentials and auto-submit login form
+  const testLoginBtn = document.getElementById('test-login');
+  const emailInput = document.getElementById('login-email');
+  const passwordInput = document.getElementById('login-password');
+  const loginForm = document.getElementById('login-form');
+
+  if (testLoginBtn && emailInput && passwordInput && loginForm) {
+    testLoginBtn.addEventListener('click', function () {
+      emailInput.value = 'testaccount@test.com';
+      passwordInput.value = 'testaccount123';
+      loginForm.submit();
+    });
+  }
 });

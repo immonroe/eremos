@@ -36,7 +36,7 @@
               <div class="alert alert-danger"><%= message %></div>
             <% } %>
 
-            <form action="/login" method="post">
+            <form action="/login" method="post" id="login-form">
               <div class="form-group">
                 <label for="login-email">Email</label>
                 <input type="email" id="login-email" class="form-control" name="email" placeholder="email@example.com" required>
@@ -50,7 +50,11 @@
                 <input type="password" id="login-password" class="form-control" name="password" placeholder="password" required>
               </div>
               
-              <button type="submit" class="btn btn-primary btn-block">Login</button>
+              <div class="login-button-container">
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="button" id="test-login" class="btn btn-primary btn-block">Test Account</button>
+              </div>
+              
             </form>
 
             <div class="auth-footer">
