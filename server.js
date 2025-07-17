@@ -17,17 +17,21 @@ var cookieParser = require('cookie-parser');
 // see things coming from forms
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
-// instead of hardcoding string here, we can require the obj - can also add database.js file to .gitignore (easier .env file)
 var configDB = require('./config/database.js');
 
-var db
+var db // This variable will now hold the native MongoDB db object
 
 // configuration ===============================================================
-mongoose.connect(configDB.url, (err, database) => {
-    if (err) return console.log(err)
-    db = database
-    require('./app/routes.js')(app, passport, db);
-}); // connect to our database
+mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(mongooseConnection => {
+        // Get the native MongoDB database object from the Mongoose connection
+        db = mongooseConnection.connection.db;
+        console.log('Successfully connected to MongoDB via Mongoose!');
+        require('./app/routes.js')(app, passport, db);
+    })
+    .catch(err => {
+        console.error('Error connecting to MongoDB:', err);
+    });
 
 require('./config/passport')(passport); // pass passport for configuration
 
