@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!entryId || !icon) {
           console.error('Delegated: Could not find entry ID or icon for bookmark.');
-          alert('Error: Could not perform bookmark action.');
           return; // Exit if we can't find necessary elements
         }
 
@@ -175,11 +174,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           } else {
             console.error('Delegated: Bookmark toggle failed:', data.message);
-            alert(`Could not toggle bookmark: ${data.message || 'Unknown error'}`);
+            // Silently handle the error - no alert needed for better UX
           }
         } catch (error) {
           console.error('Delegated: Error during fetch for bookmark toggle:', error);
-          alert(`An error occurred: ${error.message}`);
+          // Silently handle the error - no alert needed for better UX
         }
         return;
       }
