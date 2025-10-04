@@ -27,7 +27,16 @@ mongoose.connect(configDB.url, { useNewUrlParser: true, useUnifiedTopology: true
         // Get the native MongoDB database object from the Mongoose connection
         db = mongooseConnection.connection.db;
         console.log('Successfully connected to MongoDB via Mongoose!');
-        require('./app/routes.js')(app, passport, db);
+        
+        // Make database available to routes via middleware
+        app.use((req, res, next) => {
+            req.db = db;
+            next();
+        });
+        
+        // Use the new route structure
+        const routes = require('./app/routes');
+        app.use('/', routes);
     })
     .catch(err => {
         console.error('Error connecting to MongoDB:', err);
