@@ -4,13 +4,14 @@ Eremos is a mindfulness journaling app designed to help users reflect, grow, and
 
 ![eremos](https://github.com/user-attachments/assets/8ff970f9-ed49-4304-b8af-2e4dec6929af)
 
-[Live Demo](https://eremos.up.railway.app/auth)
+[Live Demo](https://eremos.up.railway.app/)
 
 ## How It's Made:
 
-**Tech used:** HTML, CSS, JavaScript, MongoDB, Express, EJS, Node.js, Gemini AI API
+**Tech used:** HTML, CSS, JavaScript, MongoDB, Express, EJS, Node.js, Gemini AI API (2.5-flash)
 
 Eremos was built using the MEEN stack, combining server-side rendering with EJS templates and a clean, user-friendly interface. The app allows users to create journal entries, which are analyzed by Gemini AI to provide personalized inspiration and mental wellness insights. The backend is structured using the MVC (Model-View-Controller) architecture, making the codebase scalable and maintainable. Special care was taken to keep load times low and memory usage efficient, especially as the app grows with more users and data.
+
 
 ## Optimizations
 
