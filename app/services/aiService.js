@@ -23,7 +23,7 @@ async function getAIReflection(currentEntryText, historicalEntries = []) { // De
             historySection = "For context, here is some of the user's relevant journal history from the last ~30 days (oldest first):\n\n";
             historicalEntries.forEach((entry) => {
                 const entryDate = entry.createdAt ? new Date(entry.createdAt).toLocaleDateString() : 'Unknown Date';
-                // Use combinedText field which should be mapped in routes.js
+                // Use combinedText field which should be mapped in routes/journal.js
                 const entryTextContent = entry.combinedText || "";
                 // Basic escaping for prompt safety
                 const safeEntryTextContent = entryTextContent.replace(/`/g, "'").replace(/\${/g, "\\${");
