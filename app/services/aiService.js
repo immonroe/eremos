@@ -15,7 +15,7 @@ async function getAIReflection(currentEntryText, historicalEntries = []) { // De
     try {
         // --- 2. Initialize Gemini Client ---
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" }); // Or a more powerful model if needed
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Or a more powerful model if needed
 
         // --- 3. Construct History Section for Prompt ---
         let historySection = "No recent entries (~ last 30 days) available for context.";
