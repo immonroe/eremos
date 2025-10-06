@@ -63,7 +63,7 @@ async function getAIReflection(currentEntryText, historicalEntries = []) { // De
     *   **Default:** DO NOT include any resources by default.
     *   **Trigger A (Mental Health Concern):** ONLY if the *current entry* contains clear language about significant mental distress (hopelessness, self-harm, seeking therapy, intense negative self-talk, etc.), THEN append the following standard resources section after your questions:
         --- Resources ---
-        If you're going through a particularly tough time, reaching out can make a difference. Consider these options:
+        If you're going through a particularly tough time, consider these options:
         *   988 Suicide & Crisis Lifeline: Call or text 988 (US & Canada)
         *   National Alliance on Mental Illness (NAMI): nami.org
         *   Psychology Today Therapist Finder: psychologytoday.com/us/therapists
