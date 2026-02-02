@@ -6,10 +6,12 @@ const bookmarkController = require('../controllers/bookmarkController');
 const activityController = require('../controllers/activityController');
 const { isLoggedIn } = require('../middleware/auth');
 
-// Profile page with search
+// Profile page with search (initial load); fragment for infinite scroll
+router.get('/profile/entries', isLoggedIn, profileController.getProfileEntriesFragment);
 router.get('/profile', isLoggedIn, profileController.getProfile);
 
 // Bookmark routes
+router.get('/bookmarks/entries', isLoggedIn, bookmarkController.getBookmarksFragment);
 router.get('/bookmarks', isLoggedIn, bookmarkController.getBookmarks);
 router.post('/entries/:id/toggle-bookmark', isLoggedIn, bookmarkController.toggleBookmark);
 

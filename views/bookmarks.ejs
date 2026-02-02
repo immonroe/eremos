@@ -49,6 +49,10 @@
           <i class="fas fa-chart-line"></i>
           <span>Activity</span>
         </a>
+        <a href="/settings" class="nav-link">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -152,10 +156,14 @@
                     </div>
                     <% } %>
           </div>
+          <div id="loadMoreSentinel" data-next-page="<%= typeof currentPage !== 'undefined' && currentPage < totalPages ? currentPage + 1 : '' %>" data-has-more="<%= typeof totalPages !== 'undefined' && currentPage < totalPages %>" data-list="bookmarks"></div>
         </div>
       </div>
     </main>
   </div>
+
+  <script src="/main.js"></script>
+  <script src="/infinite-scroll.js"></script>
 
   <!-- modal outside event loop to prevent flickering bug -->
   <div id="deleteModal" class="modal">
@@ -175,7 +183,6 @@
     </div>
   </div>
 
-  <script src="/main.js"></script>
 </body>
 
 </html>

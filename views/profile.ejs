@@ -49,6 +49,10 @@
           <i class="fas fa-chart-line"></i>
           <span>Activity</span>
         </a>
+        <a href="/settings" class="nav-link">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -100,12 +104,13 @@
                   <p>Write your thoughts and reflections in your personal sanctuary.</p>
         </div>
 
-        <!-- Search Form -->
+        <!-- Search Form (server-side MongoDB text search) -->
         <div class="search-container">
           <form action="/profile" method="GET" class="search-form">
+            <input type="hidden" name="page" value="1">
             <div class="input-group">
               <input type="search" name="q" class="form-control" placeholder="Search your entries..."
-                aria-label="Search entries" value="<%= locals.searchTerm || '' %>">
+                aria-label="Search entries" value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>">
               <button class="btn btn-search" type="submit">
                 <i class="fas fa-search"></i>
                 <span>Search</span>
@@ -148,7 +153,7 @@
           <div class="history-list">
             <% if (locals.messages && messages.length> 0) { %>
               <% messages.forEach(function(message) { %>
-                <div class="card history-card" data-id="<%= message._id %>">
+                <div class="card history-card" data-id="<%= message._id %>" data-entry-id="<%= message._id %>">
                   <div class="card-header">
                     <div class="card-title">
                       <h4><i class="far fa-calendar-alt"></i>
@@ -197,10 +202,14 @@
                     </div>
                     <% } %>
           </div>
+          <div id="loadMoreSentinel" data-next-page="<%= typeof currentPage !== 'undefined' && currentPage < totalPages ? currentPage + 1 : '' %>" data-has-more="<%= typeof totalPages !== 'undefined' && currentPage < totalPages %>" data-list="profile"></div>
         </div>
       </div>
     </main>
   </div>
+
+  <script src="/main.js"></script>
+  <script src="/infinite-scroll.js"></script>
 
   <div id="deleteModal" class="modal">
     <div class="modal-content">
@@ -218,7 +227,6 @@
       </div>
     </div>
   </div>
-  <script src="/main.js"></script>
 </body>
 
 </html>

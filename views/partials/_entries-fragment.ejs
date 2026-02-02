@@ -1,0 +1,4 @@
+<% messages.forEach(function(message) { %>
+  <%- include('_entry-card', { message }) %>
+<% }); %>
+<div id="loadMoreSentinel" data-next-page="<%= nextPage %>" data-has-more="<%= hasMore %>" data-list="<%= listType %>"></div>
