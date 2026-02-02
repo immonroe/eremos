@@ -10,9 +10,15 @@ module.exports = {
         });
     },
 
-    // Redirect root to auth
+    // Root: show homepage when not logged in, else redirect to profile
     redirectToAuth: (req, res) => {
-        res.redirect('/auth');
+        if (req.isAuthenticated()) {
+            return res.redirect('/profile');
+        }
+        res.render('home.ejs', {
+            title: 'Eremos - Find Your Oasis',
+            accountDeleted: req.query.accountDeleted === '1'
+        });
     },
 
     // Get login page (redirect to auth with login tab)

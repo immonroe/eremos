@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eremos - Find Your Oasis</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="theme-toggle" id="themeToggle">
+      <i class="fas fa-sun"></i>
+      <i class="fas fa-moon"></i>
+    </div>
+
+    <div class="auth-logo">
+      <h1>Eremos</h1>
+      <p class="tagline">Find your oasis</p>
+    </div>
+
+    <div class="auth-card home-card">
+      <% if (typeof accountDeleted !== 'undefined' && accountDeleted) { %>
+        <div class="alert alert-success" style="margin-bottom: 1rem;">Your account and all data have been permanently deleted.</div>
+      <% } %>
+      <div class="auth-header">
+        <h2>Your personal journal, with thoughtful AI reflections</h2>
+        <p>Reflect, grow, and gain clarity with journal entries that get empathetic, non-judgmental insights, backed by a curated list of resources when they're relevant to you.</p>
+      </div>
+      <div class="auth-footer" style="margin-top: 1.5rem;">
+        <a href="/auth" class="btn btn-primary btn-block">Sign in or create an account</a>
+      </div>
+    </div>
+  </div>
+  <script src="/auth.js"></script>
+</body>
+</html>
