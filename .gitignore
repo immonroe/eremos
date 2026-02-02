@@ -14,3 +14,10 @@ results
 npm-debug.log
 node_modules
 .env
+.env.local
+.env.*.local
+coverage
+scripts/backups
+.DS_Store
+*.swp
+*.swo

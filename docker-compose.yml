@@ -1,0 +1,13 @@
+# Optional: run MongoDB locally for development.
+# Start: docker-compose up -d
+# Then set in .env: DB_URL=mongodb://localhost:27017/eremos
+version: '3'
+services:
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - eremos_mongo_data:/data/db
+volumes:
+  eremos_mongo_data:
