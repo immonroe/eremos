@@ -54,11 +54,11 @@ app.use(express.static('public')) // Using public folders
 
 app.set('view engine', 'ejs'); // set up ejs for templating
 
-// required for passport
+// required for passport (use SESSION_SECRET in .env; never commit real secrets)
 app.use(session({
-    secret: 'rcbootcamp2025a', // session secret
-    resave: true,
-    saveUninitialized: true
+    secret: process.env.SESSION_SECRET || 'dev-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
