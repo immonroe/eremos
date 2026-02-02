@@ -26,6 +26,9 @@ var userSchema = mongoose.Schema({
         token        : String,
         email        : String,
         name         : String
+    },
+    preferences      : {
+        aiReflections: { type: Boolean, default: true }
     }
 
 });

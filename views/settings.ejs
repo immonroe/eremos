@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>Eremos</h1>
+          <p class="tagline">Find your oasis</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/profile" class="nav-link"><i class="fas fa-book-open"></i><span>Journal</span></a>
+        <a href="/bookmarks" class="nav-link"><i class="fas fa-bookmark"></i><span>Bookmarks</span></a>
+        <a href="/activity" class="nav-link"><i class="fas fa-chart-line"></i><span>Activity</span></a>
+        <a href="/settings" class="nav-link active"><i class="fas fa-cog"></i><span>Settings</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/profile" class="logout-btn"><i class="fas fa-arrow-left"></i><span>Back to Journal</span></a>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="content">
+        <div class="content-header">
+          <h2><i class="fas fa-cog"></i> Settings</h2>
+          <% if (locals.success && success.length > 0) { %>
+            <div class="alert alert-success"><%= success %></div>
+          <% } %>
+          <% if (locals.error && error.length > 0) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <form action="/settings" method="POST">
+              <div class="form-group">
+                <label class="toggle-label">
+                  <input type="checkbox" name="aiReflections" value="true" <%= aiReflections ? 'checked' : '' %>>
+                  Include AI reflections on new entries
+                </label>
+                <p class="form-help">When off, new journal entries are saved without calling the AI. The app is faster and uses no AI tokens.</p>
+              </div>
+              <div class="card-actions">
+                <button type="submit" class="btn btn-primary">Save settings</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-body">
+            <h3 class="card-header" style="margin-bottom: 0.5rem;">Delete account</h3>
+            <p class="form-help">Permanently delete your account and all journal entries. This cannot be undone.</p>
+            <a href="/account/delete" class="btn btn-danger">Delete account</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
