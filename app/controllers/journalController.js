@@ -14,43 +14,44 @@ module.exports = {
             return res.redirect('/profile');
         }
 
-        let aiReflectionText = "Reflection generation failed or pending...";
+        const aiEnabled = req.user.preferences && req.user.preferences.aiReflections !== false;
+        let aiReflectionText = null;
 
-        try {
-            // Get historical entries for context (last 30 days)
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        if (aiEnabled) {
+            aiReflectionText = "Reflection generation failed or pending...";
+            try {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-            const historicalEntries = await req.db.collection('messages')
-                .find({
-                    createdBy: userId,
-                    createdAt: { $gte: thirtyDaysAgo }
-                })
-                .sort({ createdAt: 1 })
-                .limit(10)
-                .toArray();
+                const historicalEntries = await req.db.collection('messages')
+                    .find({
+                        createdBy: userId,
+                        createdAt: { $gte: thirtyDaysAgo }
+                    })
+                    .sort({ createdAt: 1 })
+                    .limit(10)
+                    .toArray();
 
-            // Map historical entries for AI service
-            const mappedHistoricalEntries = historicalEntries.map(entry => ({
-                ...entry,
-                combinedText: `${entry.text || ''} ${entry.aiReflection || ''}`.trim()
-            }));
+                const mappedHistoricalEntries = historicalEntries.map(entry => ({
+                    ...entry,
+                    combinedText: `${entry.text || ''} ${entry.aiReflection || ''}`.trim()
+                }));
 
-            // Get AI reflection
-            aiReflectionText = await getAIReflection(currentEntryText, mappedHistoricalEntries);
-
-        } catch (aiError) {
-            console.error('Error getting AI reflection:', aiError);
-            aiReflectionText = "AI reflection temporarily unavailable. Your entry has been saved.";
+                aiReflectionText = await getAIReflection(currentEntryText, mappedHistoricalEntries);
+            } catch (aiError) {
+                console.error('Error getting AI reflection:', aiError);
+                aiReflectionText = "AI reflection temporarily unavailable. Your entry has been saved.";
+            }
+        } else {
+            aiReflectionText = "AI reflections are disabled. Enable them in Settings to get reflections on new entries.";
         }
 
-        // Create new entry
+        // Create new entry (bookmarks are stored in separate bookmarks collection)
         const newEntry = {
             text: currentEntryText,
             aiReflection: aiReflectionText,
             createdBy: userId,
-            createdAt: new Date(),
-            isBookmarked: false
+            createdAt: new Date()
         };
 
         try {
