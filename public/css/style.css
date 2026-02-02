@@ -287,11 +287,19 @@ p {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  font-size: var(--font-size-md);
-  /* Standard label size */
-  display: flex;
+}
+
+.toggle-label {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+}
+
+.form-help {
+  margin-top: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
 }
 
 .form-control {
@@ -816,6 +824,24 @@ p {
   background-color: var(--card);
   border-radius: var(--radius);
   border: 1px dashed var(--border);
+}
+
+.pagination-nav {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pagination-info {
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+}
+
+.pagination-links {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .empty-state i {
